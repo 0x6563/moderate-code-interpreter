@@ -1,0 +1,32 @@
+let a = scan o in orders 
+filter all { 
+    o.status == "paid"; 
+    o.items[?].id == "0120120";
+} or all {
+    o.status == "pending";
+}
+list {
+    orderId: o.id,
+    status: o.status,
+    user: query u in users filter o.userId == u.id and u.id within 2 to 3 first u ,
+    itemIds: query i in o.items list i.id,
+    sum: query o in o.items aggregate (p, c) => p + c.cost,
+    ... query o in o.items
+        aggregate { 
+            stats: {
+                sum: (p = 0, c) => p + c.cost,
+                qty: (p, c) => p + c.qty,
+
+                a: match {
+                    a < 3: "some";
+                    b < 3: "else";
+                    default: a;
+                }
+            },
+            sum: (p, c) => p + c.cost,
+            qty: (p, c) => p + c.qty
+        }
+}
+cluster (orderId, status, user)
+sort o.id
+segment 0 to 100;
