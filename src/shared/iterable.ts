@@ -22,10 +22,10 @@ export function Iterate(context: Context, value: ControlType | ValueType, keyNam
         const nested = context.fork();
 
         if (keyName) {
-            nested.declare(keyName, DynamicValue(key) as any);
+            nested.declare(keyName, key);
         }
 
-        nested.declare(valueName, DynamicValue(value) as any);
+        nested.declare(valueName, value as any);
         const r = callback(nested, keyName);
         if (r) {
             return r;

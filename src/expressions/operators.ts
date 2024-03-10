@@ -34,7 +34,7 @@ export const Expressions = {
     },
     array: {
         'contains': TypeSafeCall(['array', 'any'], (a, b) => a.includes(b)),
-        'intersects': TypeSafeCall(['array', 'array'], (a, b) => intersects(a, b)),
+        'intersects': TypeSafeCall(['array', 'array'], () => NotImplemented('intersects')),
         'like': TypeSafeCall(['array', 'array'], (a, b) => a == b),
         '==': TypeSafeCall(['array', 'array'], (a, b) => a === b),
         '!=': TypeSafeCall(['array', 'array'], (a, b) => a != b),
@@ -62,6 +62,6 @@ function TypeSafeCall(types: string[], call: (...args: any[]) => any): (values: 
         return DynamicValue(result);
     }
 }
-function intersects(a: any, b: any) {
-
+function NotImplemented(operator) {
+    return Control('error', `This "${operator}" operator is not yet implemented.`);
 }

@@ -2,24 +2,33 @@ import { ResolveValue } from "../index";
 import { QueryExpression, ValueType } from "../types";
 import { Iterate, IterateIterable } from "../shared/iterable";
 import { Context } from "../shared/context";
-import { Control, DynamicValue, Truthy, Value } from "../shared/value";
+import { Control, Truthy, Value } from "../shared/value";
 import { Sortable } from "../shared/sortable";
 
 
 export function Query(context: Context, query: QueryExpression) {
     const source = ResolveValue(context, query.source.iterable.iterable);
-    if (!source) {
+    if (!source)
         return Control('error', `Unable to query`)
-    }
 
     if (source.type == 'control')
         return source;
+    if (source.kind != 'array')
+        return Control('error', 'Unable to query non-array');
+
     const low = query?.slice?.low ? ResolveValue(context, query.slice.low) : Value('number', 0);
     if (low.type == 'control')
         return low;
+    if (low.kind != 'number')
+        return Control('error', `Unable to slice by ${low.kind}`);
+
     const high = query?.slice?.high ? ResolveValue(context, query.slice.high) : Value('number', source.value.length);
     if (high.type == 'control')
         return high;
+
+    if (high.kind != 'number')
+        return Control('error', `Unable to slice by ${high.kind}`);
+
     const include = query.filter ? (s: Context) => Truthy(ResolveValue(s, query.filter)) : () => true;
     const r = [];
     const sortMap = new WeakMap();
@@ -72,7 +81,7 @@ export function Query(context: Context, query: QueryExpression) {
         const r = ResolveValue(nested, query.yield.value);
         if (r.type == 'control')
             return r;
-        result.push(r.value.value);
+        result.push(r.value);
     })
 
 
@@ -81,7 +90,7 @@ export function Query(context: Context, query: QueryExpression) {
     }
 
     if (query.yield.kind === 'first') {
-        return DynamicValue(result[0]);
+        return result[0];
     }
 
     return Value('array', result);

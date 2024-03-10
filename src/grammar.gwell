@@ -5,6 +5,7 @@ head: ${
         Logical: 'logical',
         Assignment: 'assignment',
         Declare: 'declare',
+        Control: 'control',
         Conditional: 'conditional',
         Loop: 'loop',
         Literal: 'literal',
@@ -66,7 +67,7 @@ lexer: {{
 
     keywords ->
         - when: /\$/ tag: "keyword" highlight: "keyword"
-        - when: /let(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
+        - when: /set(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
         - when: /asc(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
         - when: /desc(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
         - when: /function(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
@@ -89,7 +90,11 @@ lexer: {{
         - when: /like(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
         - when: /not(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
         - when: /while(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
+        - when: /until(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
         - when: /to(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
+        - when: /do(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
+        - when: /run(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
+        - when: /return(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
 
         - when: /query(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
         - when: /scan(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
@@ -120,12 +125,13 @@ grammar: {{
         Assignment : {{ $0 }}
         | DeclareVar : {{ $0 }}
         | DeclareFunction : {{ $0 }}
+        | Return : {{ $0 }}
         | IfBlock : {{ { type: TYPES.Conditional, statements: $0 } }}
         | IfBlock _ "else" _ Block : {{  { type: TYPES.Conditional, statements: $0.concat([{ condition: null, statements: $4 }])} }}
         | ScanBlock : {{ $0 }}
-        | WhileBlock : {{ $0 }}
+        | ConditionLoop : {{ $0 }}
         | LoopBlock : {{ $0 }}
-        | FunctionCall : {{ $0 }}
+        | "run" __ FunctionCall _ ";" : {{ $0 }}
 
     Assignment : {{ { type: TYPES.Assignment, name: $0,  value: $4 } }} ->
         Reference _ "=" _ Exp _ ";" 
@@ -138,8 +144,11 @@ grammar: {{
         | Reference _ "%=" _ Exp _ ";"
 
     DeclareVar ->
-        "let" __ Word _ "=" _ Exp _ ";" : {{ { type: TYPES.Declare, kind: $0.value, name: $2, value: $6 } }}
+        "set" __ Word _ "=" _ Exp _ ";" : {{ { type: TYPES.Declare, kind: $0.value, name: $2, value: $6 } }}
 
+    Return ->
+        "return" _ Exp:exp _ ";" : {{ { type: TYPES.Control, kind: "return", value: $exp } }}
+    
     DeclareFunction ->
         "function" _ Word:name _ "(" _ FunctionArg_list:args _ ")" _ Block:block : {{ { type: TYPES.Declare, kind: 'function', name: $name, args: $args, statements: $block } }}
         | "function" _ Word:name _ "(" _ ")" _ Block:block : {{ { type: TYPES.Declare, kind: 'function', name: $name, args: [], statements: $block } }}
@@ -155,8 +164,11 @@ grammar: {{
         Word:value __ "in" _ Exp:exp : {{ { v: $value, iterable: $exp } }}
         |  Word:value _ "," _ Word:key __ "in" _ Exp:exp : {{ { k: $key, v: $value, iterable: $exp } }}
 
-    WhileBlock ->
-        "while" _ Exp:condition _ Block:block : {{ { type: TYPES.Loop, kind:'while', condition: $condition, statements: $block } }}
+    ConditionLoop ->
+       "while" _ Exp:condition _ Block:block : {{ { type: TYPES.Loop, kind:'while', condition: $condition, statements: $block } }}
+        | "until" _ Exp:condition _ Block:block : {{ { type: TYPES.Loop, kind:'while', condition: { type: TYPES.Expression, operator: "!", operands: [$condition] }, statements: $block } }}
+        | "do" _ Block:block __ "while" _ Exp:condition : {{ { type: TYPES.Loop, kind:'while', condition: $condition, statements: $block } }}
+        | "do" _ Block:block __ "until" _ Exp:condition : {{ { type: TYPES.Loop, kind:'while', condition: { type: TYPES.Expression, operator: "!", operands: [$condition] }, statements: $block } }}
 
     LoopBlock ->
         "for" _ "(" _ DeclareVar:base  _ Exp:condition _ ";" _ Assignment:step _ ")" _ Block:block : {{ { type: TYPES.Loop, kind:'for', base: $base, step: $step, condition: $condition, statements: $block } }}
@@ -211,7 +223,7 @@ grammar: {{
         | ExpProduct _ "%" _ ExpUnary
         | ExpUnary : {{ $0 }}
 
-    ExpUnary : {{ {type: TYPES.Expression, operator: "!", operands: [$2] } }} ->
+    ExpUnary : {{ { type: TYPES.Expression, operator: "!", operands: [$2] } }} ->
         "!" _ ExpPower
         | "not" _ ExpPower
         | ExpPower : {{ $0 }}

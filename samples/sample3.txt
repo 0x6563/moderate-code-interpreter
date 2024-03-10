@@ -1,0 +1,16 @@
+set items = [
+   {k: {i: 1}},
+   {k: {i: 2}},
+   {k: {i: 3}},
+   {k: {i: 4}},
+   {k: {i: 5}},
+   {k: {i: 6}},
+   {k: {i: 7}}
+];
+
+return query o in items
+filter all { 
+    o.k.i > 2;
+    o.k.i < 5;
+}
+list o;

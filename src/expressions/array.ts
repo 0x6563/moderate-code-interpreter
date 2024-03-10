@@ -1,16 +1,16 @@
 import { ResolveValue } from "../index";
 import { Context } from "../shared/context";
-import { Control, Value } from "../shared/value";
-import { ArrayLiteralExpression } from "../types";
+import { Value } from "../shared/value";
+import { ArrayLiteralExpression, ControlType, ValueTypeArray } from "../types";
 
-export function ArrayLiteral(context: Context, expression: ArrayLiteralExpression) {
+export function ArrayLiteral(context: Context, expression: ArrayLiteralExpression): ControlType | ValueTypeArray {
     const result = [];
     for (const prop of expression.items) {
         const value = ResolveValue(context, prop);
         if (value.type == 'control') {
             return value;
         }
-        result.push(value.value);
+        result.push(value);
     }
-    return Value('array', result);
+    return Value('array', result) as ValueTypeArray;
 }

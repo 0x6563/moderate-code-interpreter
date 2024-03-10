@@ -6,14 +6,14 @@ export interface Context {
     resolve: (ref: any) => any;
 
 }
-export type ValueTypeUndefined = { type: 'value', kind: "undefined", value: any };
-export type ValueTypeNull = { type: 'value', kind: "null", value: any };
-export type ValueTypeString = { type: 'value', kind: "string", value: any };
-export type ValueTypeNumber = { type: 'value', kind: "number", value: any };
-export type ValueTypeBoolean = { type: 'value', kind: "boolean", value: any }
-export type ValueTypeObject = { type: 'value', kind: "object", value: any };
-export type ValueTypeArray = { type: 'value', kind: "array", value: any };
-export type ValueTypeCustom = { type: 'value', kind: "custom", sub: string; value: any };
+export type ValueTypeUndefined = { type: 'value', kind: "undefined", value: undefined };
+export type ValueTypeNull = { type: 'value', kind: "null", value: null };
+export type ValueTypeString = { type: 'value', kind: "string", value: string };
+export type ValueTypeNumber = { type: 'value', kind: "number", value: number };
+export type ValueTypeBoolean = { type: 'value', kind: "boolean", value: boolean }
+export type ValueTypeObject = { type: 'value', kind: "object", value: { [key: string]: ValueType } };
+export type ValueTypeArray = { type: 'value', kind: "array", value: ValueType[] };
+export type ValueTypeCustom = { type: 'value', kind: "custom", sub: string; value: never };
 
 export type ValueType = ValueTypeUndefined | ValueTypeNull | ValueTypeString | ValueTypeNumber | ValueTypeBoolean | ValueTypeObject | ValueTypeArray | ValueTypeCustom;
 
@@ -29,6 +29,12 @@ export type LiteralExpressionNumber = { type: 'literal', kind: 'number', value: 
 export type LiteralExpressionBoolean = { type: 'literal', kind: 'boolean', value: string };
 export type LiteralExpressionNull = { type: 'literal', kind: 'null', value: string };
 export type LiteralExpression = LiteralExpressionString | LiteralExpressionNumber | LiteralExpressionBoolean | LiteralExpressionNull;
+
+export interface Scope {
+    [key: string]: ValueType
+}
+
+export type ScopeResult = { type: 'scope', scope: Scope }
 
 export type OperatorExpression = {
     type: "expression";
@@ -96,8 +102,7 @@ export type StatementEach = { type: 'loop', kind: 'scan', k?: string, v: string;
 
 export type ConditionalStatement = { condition: Expression, statements: Statement[] };
 
-export type Statement = StatementDeclare | StatementAssignment | StatementConditional | StatementWhile | StatementEach | StatementFor;
-
+export type Statement = StatementDeclare | StatementAssignment | StatementConditional | StatementWhile | StatementEach | StatementFor | ControlType;
 
 const TYPES = {
     Expression: "expression",

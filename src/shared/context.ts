@@ -1,8 +1,8 @@
-import { ControlType, ValueType } from "../types";
+import { ControlType, Scope, ValueType } from "../types";
 import { Control } from "./value";
 
 export class Context {
-    scope: { [key: string]: ValueType } = Object.create(null);
+    scope: Scope = Object.create(null);
     private stack: Context[];
 
     constructor(stack: Context[] = []) {

@@ -1,4 +1,4 @@
-let a = query o in orders 
+set a = query o in orders 
 filter all { 
     o.status == "paid"; 
     o.items[?].id == "0120120";

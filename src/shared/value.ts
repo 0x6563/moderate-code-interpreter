@@ -1,5 +1,10 @@
 import { ControlType, ValueType } from "../types";
 
+type VORC<T> = T extends 'value' ? ValueType : ControlType;
+export function Wrap<T extends 'value' | 'control'>(type: T, kind: VORC<T>['kind'], value: any): VORC<T> {
+    return { type, kind, value } as any;
+}
+
 export function Value(kind: ValueType['kind'], value: any): ValueType {
     return { type: 'value', kind, value } as ValueType;
 }

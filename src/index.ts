@@ -1,7 +1,7 @@
 import { Expressions } from "./expressions/operators";
 import { Literals } from "./expressions/literals";
 import { Logical } from "./expressions/logical";
-import { Statement, ValueType, Expression, ControlType } from "./types";
+import { Statement, ValueType, Expression, ControlType, ScopeResult } from "./types";
 import { Assignment } from "./statements/assignment";
 import { Declare } from "./statements/declare";
 import { If } from "./statements/if";
@@ -24,16 +24,20 @@ export function Run(tree: any, data?: any) {
     return Resolve(context, tree);
 }
 
-export function Resolve(context: Context, tree: any) {
+export function Resolve(context: Context, tree: any): ControlType | ValueType | ScopeResult {
     if (tree.expression) {
         return ResolveValue(context, tree.expression);
     }
     if (tree.statements) {
-        return ResolveStatements(context, tree.statements);
+        const r = ResolveStatements(context, tree.statements);
+        if (r) {
+            return r.kind == 'break' || r.kind == 'return' ? r.value : ({ result: r, scope: context.scope }) as any;
+        }
+        return { type: 'scope', scope: context.scope };
     }
 }
 
-export function ResolveStatements(context: Context, statements: Statement[]) {
+export function ResolveStatements(context: Context, statements: Statement[]): ControlType | void {
     for (const statement of statements) {
         let r = ResolveStatement(context, statement);
         if (r) {
@@ -42,7 +46,7 @@ export function ResolveStatements(context: Context, statements: Statement[]) {
     }
 }
 
-export function ResolveStatement(context: Context, statement: Statement): any {
+export function ResolveStatement(context: Context, statement: Statement): ControlType | void {
     if (statement.type == 'assignment') {
         return Assignment(context, statement)
     }
@@ -64,6 +68,13 @@ export function ResolveStatement(context: Context, statement: Statement): any {
         }
     }
 
+    if (statement.type == 'control') {
+        if (statement.kind == 'break' || statement.kind == 'return') {
+            return Control(statement.kind, ResolveValue(context, statement.value));
+        }
+        return statement;
+    }
+
     return Control('error', `Unhandled Statement: ${(statement as any)?.type}`);
 }
 
@@ -79,7 +90,13 @@ export function ResolveValue(context: Context, obj: Expression | ValueType): Con
     }
 
     if (obj.type == 'expression') {
-        const operands = obj.operands.map(v => ResolveValue(context, v));
+        const operands = [];
+        for (const o of obj.operands) {
+            const r = ResolveValue(context, o);
+            if (r.type == 'control')
+                return r;
+            operands.push(r);
+        }
         if (!(Expressions?.[operands[0].kind]?.[obj.operator])) {
             return Control('error', `Unknown Operator Type ${obj.operator} for ${operands[0].kind}`);
         }

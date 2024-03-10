@@ -1,10 +1,10 @@
 import { ResolveValue } from "../index";
 import { Context } from "../shared/context";
-import { Control, Value } from "../shared/value";
-import { ObjectLiteralExpression } from "../types";
+import { Control, Wrap } from "../shared/value";
+import { ControlType, ObjectLiteralExpression, ValueTypeObject } from "../types";
 
-export function ObjectLiteral(context: Context, expression: ObjectLiteralExpression) {
-    const result = {};
+export function ObjectLiteral(context: Context, expression: ObjectLiteralExpression): ValueTypeObject | ControlType {
+    const result: ValueTypeObject['value'] = {};
     for (const prop of expression.properties) {
         if ('type' in prop) {
             if (prop.type == 'spread') {
@@ -24,8 +24,8 @@ export function ObjectLiteral(context: Context, expression: ObjectLiteralExpress
             if (value.type == 'control') {
                 return value;
             }
-            result[prop.key] == value.value;
+            result[prop.key] = value;
         }
     }
-    return Value('object', result);
+    return Wrap('value', 'object', result) as ValueTypeObject;
 }

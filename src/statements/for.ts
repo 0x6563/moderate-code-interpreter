@@ -6,7 +6,7 @@ import { StatementFor } from "../types";
 export function For(context: Context, statement: StatementFor) {
     const nested = context.fork();
     const r = ResolveStatement(nested, statement.base);
-    if (r.type == 'control') {
+    if (r && r.type == 'control') {
         return r;
     }
 
@@ -27,7 +27,7 @@ export function For(context: Context, statement: StatementFor) {
             }
 
             const step = ResolveStatement(nested, statement.step);
-            if (step.type == 'control') {
+            if (step && step.type == 'control') {
                 return step;
             }
         }
