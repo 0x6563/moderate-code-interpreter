@@ -46,7 +46,7 @@ export type LogicalExpression = {
 export interface QueryExpression {
     type: 'query',
     source: {
-        kind: 'query' | 'scan';
+        kind: 'query';
         iterable: KVIterable;
     },
     filter?: Expression,
@@ -92,7 +92,7 @@ export type StatementAssignment = { type: 'assignment', name: string, value: Exp
 export type StatementConditional = { type: 'conditional', statements: ConditionalStatement[] };
 export type StatementWhile = { type: 'loop', kind: 'while', condition: Expression, statements: Statement[] };
 export type StatementFor = { type: 'loop', kind: 'for', base: Statement, step: Statement, condition: Expression, statements: Statement[] };
-export type StatementEach = { type: 'loop', kind: 'each', k?: string, v: string; iterable: Expression; statements: Statement[] };
+export type StatementEach = { type: 'loop', kind: 'scan', k?: string, v: string; iterable: Expression; statements: Statement[] };
 
 export type ConditionalStatement = { condition: Expression, statements: Statement[] };
 

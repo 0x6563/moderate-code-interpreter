@@ -84,7 +84,6 @@ lexer: {{
         - when: /match(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
         - when: /default(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
         - when: /in(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
-        - when: /each(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
         - when: /else(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
         - when: /for(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
         - when: /like(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
@@ -123,7 +122,7 @@ grammar: {{
         | DeclareFunction : {{ $0 }}
         | IfBlock : {{ { type: TYPES.Conditional, statements: $0 } }}
         | IfBlock _ "else" _ Block : {{  { type: TYPES.Conditional, statements: $0.concat([{ condition: null, statements: $4 }])} }}
-        | EachBlock : {{ $0 }}
+        | ScanBlock : {{ $0 }}
         | WhileBlock : {{ $0 }}
         | LoopBlock : {{ $0 }}
         | FunctionCall : {{ $0 }}
@@ -149,8 +148,8 @@ grammar: {{
         "if" _ Exp _ Block : {{ [{ condition: $2, statements: $4 }] }}
         | IfBlock _ "else" _ IfBlock : {{ $0.concat($4) }}
 
-    EachBlock ->
-        "each" __ KVInIterator:kv _ Block:block : {{ { type: TYPES.Loop, kind: 'each', ...$kv, statements: $block } }}
+    ScanBlock ->
+        "scan" __ KVInIterator:kv _ Block:block : {{ { type: TYPES.Loop, kind: 'scan', ...$kv, statements: $block } }}
 
     KVInIterator -> 
         Word:value __ "in" _ Exp:exp : {{ { v: $value, iterable: $exp } }}
@@ -273,10 +272,9 @@ grammar: {{
         | "..." _ Exp : {{ { type: TYPES.Spread, value: $2 } }}
         | Word : {{ { key: $0, value: { type: TYPES.Reference, path: $0 } } }}
 
-    Query -> QSourse ( __ QFilter)? __ QYield ( __ QCluster)? ( __ QSort)?  ( __ QSlice)? : {{ { type: TYPES.Query,  source: $0, filter: $1?.[1], yield: $3, cluster: $4?.[1], sort: $5?.[1],  slice: $6?.[1] } }}
+    Query -> QQuery ( __ QFilter)? __ QYield ( __ QCluster)? ( __ QSort)?  ( __ QSlice)? : {{ { type: TYPES.Query,  source: $0, filter: $1?.[1], yield: $3, cluster: $4?.[1], sort: $5?.[1],  slice: $6?.[1] } }}
 
-    QSourse : {{ { kind:$0.value, iterable: $2 } }} -> "query" __ KVInIterator 
-        | "scan" __ KVInIterator 
+    QQuery : {{ { kind:$0.value, iterable: $2 } }} -> "query" __ KVInIterator 
 
     QSort -> "sort" __ Exp ( __ "desc"|"asc")? : {{ { expression: $2, direction: $3?.[1].value } }}
 

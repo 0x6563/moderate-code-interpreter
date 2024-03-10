@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
 import { ParseSample } from "./src/parse.js";
-import { Resolve, Run } from "./src/index.js";
+import { Run } from "./src/index.js";
 const BaseDir = './samples/';
 
 const grammar = read('../src/grammar.gwell');

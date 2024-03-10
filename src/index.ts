@@ -5,7 +5,7 @@ import { Statement, ValueType, Expression, ControlType } from "./types";
 import { Assignment } from "./statements/assignment";
 import { Declare } from "./statements/declare";
 import { If } from "./statements/if";
-import { Each } from "./statements/each";
+import { Scan } from "./statements/scan";
 import { For } from "./statements/for";
 import { While } from "./statements/while";
 import { Context } from "./shared/context";
@@ -53,8 +53,8 @@ export function ResolveStatement(context: Context, statement: Statement): any {
         return If(context, statement);
     }
     if (statement.type == 'loop') {
-        if (statement.kind == 'each') {
-            return Each(context, statement);
+        if (statement.kind == 'scan') {
+            return Scan(context, statement);
         }
         if (statement.kind == 'for') {
             return For(context, statement);
