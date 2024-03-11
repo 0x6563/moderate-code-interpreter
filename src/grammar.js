@@ -2,7 +2,7 @@
 // https://github.com/0x6563/grammar-well
 
     const TYPES = {
-        Expression: 'expression',
+        Operation: 'operation',
         Default: 'default',
         Logical: 'logical',
         Assignment: 'assignment',
@@ -16,6 +16,7 @@
         Lambda: 'lambda',
         Reference: 'reference',
         Query: 'query',
+        Run: 'run',
         Call: 'call',
         Match: 'match',
         Spread: 'spread',
@@ -38,7 +39,7 @@ function GWLanguage(){
                 ],
                 Statements: [
                     { name: "Statements", symbols: [ "Statement" ], postprocess: ({data}) => { return [data[0]]; } },
-                    { name: "Statements", symbols: [ "Statements", "_", "Statement" ], postprocess: ({data}) => { return data[0].concat(data[2]); } }
+                    { name: "Statements", symbols: [ "Statements", "_", "Statement" ], postprocess: ({data}) => { return ( data[2].type == 'declare' &&  data[2].kind =='function'? data[0].unshift(data[2]): data[0].push(data[2])) && data[0]; } }
                 ],
                 Statement: [
                     { name: "Statement", symbols: [ "Assignment" ], postprocess: ({data}) => { return data[0]; } },
@@ -50,18 +51,20 @@ function GWLanguage(){
                     { name: "Statement", symbols: [ "ScanBlock" ], postprocess: ({data}) => { return data[0]; } },
                     { name: "Statement", symbols: [ "ConditionLoop" ], postprocess: ({data}) => { return data[0]; } },
                     { name: "Statement", symbols: [ "LoopBlock" ], postprocess: ({data}) => { return data[0]; } },
-                    { name: "Statement", symbols: [ { literal: "run" }, "__", "FunctionCall", "_", { literal: ";" } ], postprocess: ({data}) => { return data[0]; } }
+                    { name: "Statement", symbols: [ { literal: "run" }, "__", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Run, expression: data[2] }; } }
                 ],
                 Assignment: [
                     { name: "Assignment", symbols: [ "Reference", "_", { literal: "=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, name: data[0],  value: data[4] }; } },
-                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "+=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, name: data[0],  value: { type: TYPES.Expression, operator: data[2].value[0], operands: [data[0], data[4]] } }; } },
-                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "-=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, name: data[0],  value: { type: TYPES.Expression, operator: data[2].value[0], operands: [data[0], data[4]] } }; } },
-                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "/=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, name: data[0],  value: { type: TYPES.Expression, operator: data[2].value[0], operands: [data[0], data[4]] } }; } },
-                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "*=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, name: data[0],  value: { type: TYPES.Expression, operator: data[2].value[0], operands: [data[0], data[4]] } }; } },
-                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "%=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, name: data[0],  value: { type: TYPES.Expression, operator: data[2].value[0], operands: [data[0], data[4]] } }; } }
+                    { name: "Assignment", symbols: [ { literal: "set" }, "__", "Reference", "_", { literal: "=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, name: data[2],  value: data[6] }; } },
+                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "+=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, name: data[0],  value: { type: TYPES.Operation, operator: data[2].value[0], operands: [data[0], data[4]] } }; } },
+                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "-=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, name: data[0],  value: { type: TYPES.Operation, operator: data[2].value[0], operands: [data[0], data[4]] } }; } },
+                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "/=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, name: data[0],  value: { type: TYPES.Operation, operator: data[2].value[0], operands: [data[0], data[4]] } }; } },
+                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "*=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, name: data[0],  value: { type: TYPES.Operation, operator: data[2].value[0], operands: [data[0], data[4]] } }; } },
+                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "%=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, name: data[0],  value: { type: TYPES.Operation, operator: data[2].value[0], operands: [data[0], data[4]] } }; } }
                 ],
                 DeclareVar: [
-                    { name: "DeclareVar", symbols: [ { literal: "set" }, "__", "Word", "_", { literal: "=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Declare, kind: data[0].value, name: data[2], value: data[6] }; } }
+                    { name: "DeclareVar", symbols: [ { literal: "var" }, "__", "Word", "_", { literal: "=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Declare, kind: 'var', name: data[2], value: data[6] }; } },
+                    { name: "DeclareVar", symbols: [ { literal: "const" }, "__", "Word", "_", { literal: "=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Declare, kind: 'const', name: data[2], value: data[6] }; } }
                 ],
                 Return: [
                     { name: "Return", symbols: [ { literal: "return" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Control, kind: "return", value: data[2] }; } }
@@ -83,9 +86,9 @@ function GWLanguage(){
                 ],
                 ConditionLoop: [
                     { name: "ConditionLoop", symbols: [ { literal: "while" }, "_", "Exp", "_", "Block" ], postprocess: ({data}) => { return { type: TYPES.Loop, kind:'while', condition: data[2], statements: data[4] }; } },
-                    { name: "ConditionLoop", symbols: [ { literal: "until" }, "_", "Exp", "_", "Block" ], postprocess: ({data}) => { return { type: TYPES.Loop, kind:'while', condition: { type: TYPES.Expression, operator: "!", operands: [data[2]] }, statements: data[4] }; } },
+                    { name: "ConditionLoop", symbols: [ { literal: "until" }, "_", "Exp", "_", "Block" ], postprocess: ({data}) => { return { type: TYPES.Loop, kind:'while', condition: { type: TYPES.Operation, operator: "!", operands: [data[2]] }, statements: data[4] }; } },
                     { name: "ConditionLoop", symbols: [ { literal: "do" }, "_", "Block", "__", { literal: "while" }, "_", "Exp" ], postprocess: ({data}) => { return { type: TYPES.Loop, kind:'while', condition: data[6], statements: data[2] }; } },
-                    { name: "ConditionLoop", symbols: [ { literal: "do" }, "_", "Block", "__", { literal: "until" }, "_", "Exp" ], postprocess: ({data}) => { return { type: TYPES.Loop, kind:'while', condition: { type: TYPES.Expression, operator: "!", operands: [data[6]] }, statements: data[2] }; } }
+                    { name: "ConditionLoop", symbols: [ { literal: "do" }, "_", "Block", "__", { literal: "until" }, "_", "Exp" ], postprocess: ({data}) => { return { type: TYPES.Loop, kind:'while', condition: { type: TYPES.Operation, operator: "!", operands: [data[6]] }, statements: data[2] }; } }
                 ],
                 LoopBlock: [
                     { name: "LoopBlock", symbols: [ { literal: "for" }, "_", { literal: "(" }, "_", "DeclareVar", "_", "Exp", "_", { literal: ";" }, "_", "Assignment", "_", { literal: ")" }, "_", "Block" ], postprocess: ({data}) => { return { type: TYPES.Loop, kind:'for', base: data[4], step: data[10], condition: data[6], statements: data[14] }; } }
@@ -117,39 +120,39 @@ function GWLanguage(){
                     { name: "ExpAnd", symbols: [ "ExpCompare" ], postprocess: ({data}) => { return data[0]; } }
                 ],
                 ExpCompare: [
-                    { name: "ExpCompare", symbols: [ "ExpCompare", "_", { literal: "<" }, "_", "ExpConcat" ], postprocess: ({data}) => { return { type: TYPES.Expression, operator: data[2].value, operands: [data[0], data[4]] }; } },
-                    { name: "ExpCompare", symbols: [ "ExpCompare", "_", { literal: ">" }, "_", "ExpConcat" ], postprocess: ({data}) => { return { type: TYPES.Expression, operator: data[2].value, operands: [data[0], data[4]] }; } },
-                    { name: "ExpCompare", symbols: [ "ExpCompare", "_", { literal: "<=" }, "_", "ExpConcat" ], postprocess: ({data}) => { return { type: TYPES.Expression, operator: data[2].value, operands: [data[0], data[4]] }; } },
-                    { name: "ExpCompare", symbols: [ "ExpCompare", "_", { literal: ">=" }, "_", "ExpConcat" ], postprocess: ({data}) => { return { type: TYPES.Expression, operator: data[2].value, operands: [data[0], data[4]] }; } },
-                    { name: "ExpCompare", symbols: [ "ExpCompare", "_", { literal: "!=" }, "_", "ExpConcat" ], postprocess: ({data}) => { return { type: TYPES.Expression, operator: data[2].value, operands: [data[0], data[4]] }; } },
-                    { name: "ExpCompare", symbols: [ "ExpCompare", "_", { literal: "==" }, "_", "ExpConcat" ], postprocess: ({data}) => { return { type: TYPES.Expression, operator: data[2].value, operands: [data[0], data[4]] }; } },
-                    { name: "ExpCompare", symbols: [ "ExpCompare", "_", { literal: "like" }, "_", "ExpConcat" ], postprocess: ({data}) => { return { type: TYPES.Expression, operator: data[2].value, operands: [data[0], data[4]] }; } },
-                    { name: "ExpCompare", symbols: [ "ExpCompare", "_", { literal: "within" }, "_", "Range" ], postprocess: ({data}) => { return { type: TYPES.Expression, operator: data[2].value, operands: [data[0], data[4].low, data[4].high] }; } },
-                    { name: "ExpCompare", symbols: [ "ExpCompare", "_", { literal: "between" }, "_", "Range" ], postprocess: ({data}) => { return { type: TYPES.Expression, operator: data[2].value, operands: [data[0], data[4].low, data[4].high] }; } },
+                    { name: "ExpCompare", symbols: [ "ExpCompare", "_", { literal: "<" }, "_", "ExpConcat" ], postprocess: ({data}) => { return { type: TYPES.Operation, operator: data[2].value, operands: [data[0], data[4]] }; } },
+                    { name: "ExpCompare", symbols: [ "ExpCompare", "_", { literal: ">" }, "_", "ExpConcat" ], postprocess: ({data}) => { return { type: TYPES.Operation, operator: data[2].value, operands: [data[0], data[4]] }; } },
+                    { name: "ExpCompare", symbols: [ "ExpCompare", "_", { literal: "<=" }, "_", "ExpConcat" ], postprocess: ({data}) => { return { type: TYPES.Operation, operator: data[2].value, operands: [data[0], data[4]] }; } },
+                    { name: "ExpCompare", symbols: [ "ExpCompare", "_", { literal: ">=" }, "_", "ExpConcat" ], postprocess: ({data}) => { return { type: TYPES.Operation, operator: data[2].value, operands: [data[0], data[4]] }; } },
+                    { name: "ExpCompare", symbols: [ "ExpCompare", "_", { literal: "!=" }, "_", "ExpConcat" ], postprocess: ({data}) => { return { type: TYPES.Operation, operator: data[2].value, operands: [data[0], data[4]] }; } },
+                    { name: "ExpCompare", symbols: [ "ExpCompare", "_", { literal: "==" }, "_", "ExpConcat" ], postprocess: ({data}) => { return { type: TYPES.Operation, operator: data[2].value, operands: [data[0], data[4]] }; } },
+                    { name: "ExpCompare", symbols: [ "ExpCompare", "_", { literal: "like" }, "_", "ExpConcat" ], postprocess: ({data}) => { return { type: TYPES.Operation, operator: data[2].value, operands: [data[0], data[4]] }; } },
+                    { name: "ExpCompare", symbols: [ "ExpCompare", "_", { literal: "within" }, "_", "Range" ], postprocess: ({data}) => { return { type: TYPES.Operation, operator: data[2].value, operands: [data[0], data[4].low, data[4].high] }; } },
+                    { name: "ExpCompare", symbols: [ "ExpCompare", "_", { literal: "between" }, "_", "Range" ], postprocess: ({data}) => { return { type: TYPES.Operation, operator: data[2].value, operands: [data[0], data[4].low, data[4].high] }; } },
                     { name: "ExpCompare", symbols: [ "ExpConcat" ], postprocess: ({data}) => { return data[0]; } }
                 ],
                 ExpConcat: [
-                    { name: "ExpConcat", symbols: [ "ExpSum", "_", { literal: ".." }, "_", "ExpConcat" ], postprocess: ({data}) => { return { type: TYPES.Expression, operator: data[2].value, operands: [data[0], data[4]] }; } },
+                    { name: "ExpConcat", symbols: [ "ExpSum", "_", { literal: ".." }, "_", "ExpConcat" ], postprocess: ({data}) => { return { type: TYPES.Operation, operator: data[2].value, operands: [data[0], data[4]] }; } },
                     { name: "ExpConcat", symbols: [ "ExpSum" ], postprocess: ({data}) => { return data[0]; } }
                 ],
                 ExpSum: [
-                    { name: "ExpSum", symbols: [ "ExpSum", "_", { literal: "+" }, "_", "ExpProduct" ], postprocess: ({data}) => { return { type: TYPES.Expression, operator: data[2].value, operands: [data[0], data[4]] }; } },
-                    { name: "ExpSum", symbols: [ "ExpSum", "_", { literal: "-" }, "_", "ExpProduct" ], postprocess: ({data}) => { return { type: TYPES.Expression, operator: data[2].value, operands: [data[0], data[4]] }; } },
+                    { name: "ExpSum", symbols: [ "ExpSum", "_", { literal: "+" }, "_", "ExpProduct" ], postprocess: ({data}) => { return { type: TYPES.Operation, operator: data[2].value, operands: [data[0], data[4]] }; } },
+                    { name: "ExpSum", symbols: [ "ExpSum", "_", { literal: "-" }, "_", "ExpProduct" ], postprocess: ({data}) => { return { type: TYPES.Operation, operator: data[2].value, operands: [data[0], data[4]] }; } },
                     { name: "ExpSum", symbols: [ "ExpProduct" ], postprocess: ({data}) => { return data[0]; } }
                 ],
                 ExpProduct: [
-                    { name: "ExpProduct", symbols: [ "ExpProduct", "_", { literal: "*" }, "_", "ExpUnary" ], postprocess: ({data}) => { return { type: TYPES.Expression, operator: data[2].value, operands: [data[0], data[4]] }; } },
-                    { name: "ExpProduct", symbols: [ "ExpProduct", "_", { literal: "/" }, "_", "ExpUnary" ], postprocess: ({data}) => { return { type: TYPES.Expression, operator: data[2].value, operands: [data[0], data[4]] }; } },
-                    { name: "ExpProduct", symbols: [ "ExpProduct", "_", { literal: "%" }, "_", "ExpUnary" ], postprocess: ({data}) => { return { type: TYPES.Expression, operator: data[2].value, operands: [data[0], data[4]] }; } },
+                    { name: "ExpProduct", symbols: [ "ExpProduct", "_", { literal: "*" }, "_", "ExpUnary" ], postprocess: ({data}) => { return { type: TYPES.Operation, operator: data[2].value, operands: [data[0], data[4]] }; } },
+                    { name: "ExpProduct", symbols: [ "ExpProduct", "_", { literal: "/" }, "_", "ExpUnary" ], postprocess: ({data}) => { return { type: TYPES.Operation, operator: data[2].value, operands: [data[0], data[4]] }; } },
+                    { name: "ExpProduct", symbols: [ "ExpProduct", "_", { literal: "%" }, "_", "ExpUnary" ], postprocess: ({data}) => { return { type: TYPES.Operation, operator: data[2].value, operands: [data[0], data[4]] }; } },
                     { name: "ExpProduct", symbols: [ "ExpUnary" ], postprocess: ({data}) => { return data[0]; } }
                 ],
                 ExpUnary: [
-                    { name: "ExpUnary", symbols: [ { literal: "!" }, "_", "ExpPower" ], postprocess: ({data}) => { return { type: TYPES.Expression, operator: "!", operands: [data[2]] }; } },
-                    { name: "ExpUnary", symbols: [ { literal: "not" }, "_", "ExpPower" ], postprocess: ({data}) => { return { type: TYPES.Expression, operator: "!", operands: [data[2]] }; } },
+                    { name: "ExpUnary", symbols: [ { literal: "!" }, "_", "ExpPower" ], postprocess: ({data}) => { return { type: TYPES.Operation, operator: "!", operands: [data[2]] }; } },
+                    { name: "ExpUnary", symbols: [ { literal: "not" }, "_", "ExpPower" ], postprocess: ({data}) => { return { type: TYPES.Operation, operator: "!", operands: [data[2]] }; } },
                     { name: "ExpUnary", symbols: [ "ExpPower" ], postprocess: ({data}) => { return data[0]; } }
                 ],
                 ExpPower: [
-                    { name: "ExpPower", symbols: [ "Atom", "_", { literal: "^" }, "_", "ExpPower" ], postprocess: ({data}) => { return { type: TYPES.Expression, operator: data[2].value, operands: [data[0], data[4]] }; } },
+                    { name: "ExpPower", symbols: [ "Atom", "_", { literal: "^" }, "_", "ExpPower" ], postprocess: ({data}) => { return { type: TYPES.Operation, operator: data[2].value, operands: [data[0], data[4]] }; } },
                     { name: "ExpPower", symbols: [ "Atom" ], postprocess: ({data}) => { return data[0]; } }
                 ],
                 Atom: [
@@ -291,7 +294,7 @@ function GWLanguage(){
                 ],
                 FunctionArg: [
                     { name: "FunctionArg", symbols: [ "Word" ], postprocess: ({data}) => { return { name: data[0] }; } },
-                    { name: "FunctionArg", symbols: [ "Word", "_", { literal: "=" }, "_", "Atom" ], postprocess: ({data}) => { return { name: data[0], default: data[4] }; } }
+                    { name: "FunctionArg", symbols: [ "Word", "_", { literal: "=" }, "_", "Exp" ], postprocess: ({data}) => { return { name: data[0], default: data[4] }; } }
                 ],
                 FunctionArg_list: [
                     { name: "FunctionArg_list", symbols: [ "FunctionArg" ], postprocess: ({data}) => { return [data[0]]; } },
@@ -302,7 +305,7 @@ function GWLanguage(){
                     { name: "PropName", symbols: [ "Word" ], postprocess: ({data}) => { return data[0]; } }
                 ],
                 FunctionCall: [
-                    { name: "FunctionCall", symbols: [ "Word", "_", { literal: "(" }, "_", "Exp_list", "_", { literal: ")" } ], postprocess: ({data}) => { return { type: TYPES.Call, name: data[0],args:data[4] }; } },
+                    { name: "FunctionCall", symbols: [ "Word", "_", { literal: "(" }, "_", "Exp_list", "_", { literal: ")" } ], postprocess: ({data}) => { return { type: TYPES.Call, name: data[0], args: data[4] }; } },
                     { name: "FunctionCall", symbols: [ "Word", "_", { literal: "(" }, "_", { literal: ")" } ], postprocess: ({data}) => { return { type: TYPES.Call, name: data[0], args: [] }; } }
                 ],
                 VariadicLogic$RPT01x1$SUBx1: [
@@ -396,6 +399,8 @@ function GWLanguage(){
                     rules: [
                         { when: /\$/, tag: ["keyword"], highlight: "keyword" },
                         { when: /set(?![a-zA-Z])/, tag: ["keyword"], highlight: "keyword" },
+                        { when: /var(?![a-zA-Z])/, tag: ["keyword"], highlight: "keyword" },
+                        { when: /const(?![a-zA-Z])/, tag: ["keyword"], highlight: "keyword" },
                         { when: /asc(?![a-zA-Z])/, tag: ["keyword"], highlight: "keyword" },
                         { when: /desc(?![a-zA-Z])/, tag: ["keyword"], highlight: "keyword" },
                         { when: /function(?![a-zA-Z])/, tag: ["keyword"], highlight: "keyword" },

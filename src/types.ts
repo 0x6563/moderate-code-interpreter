@@ -1,11 +1,5 @@
-// export interface ValueDictionary {
-//     [name: string]: ValueType;
-// }
+import { Context } from "./shared/context";
 
-export interface Context {
-    resolve: (ref: any) => any;
-
-}
 export type ValueTypeUndefined = { type: 'value', kind: "undefined", value: undefined };
 export type ValueTypeNull = { type: 'value', kind: "null", value: null };
 export type ValueTypeString = { type: 'value', kind: "string", value: string };
@@ -14,9 +8,9 @@ export type ValueTypeBoolean = { type: 'value', kind: "boolean", value: boolean 
 export type ValueTypeObject = { type: 'value', kind: "object", value: { [key: string]: ValueType } };
 export type ValueTypeArray = { type: 'value', kind: "array", value: ValueType[] };
 export type ValueTypeCustom = { type: 'value', kind: "custom", sub: string; value: never };
+export type ValueTypeFunction = { type: 'value', kind: "function", value: { context: Context, args: FunctionArgument[]; statements: Statement[] } };
 
-export type ValueType = ValueTypeUndefined | ValueTypeNull | ValueTypeString | ValueTypeNumber | ValueTypeBoolean | ValueTypeObject | ValueTypeArray | ValueTypeCustom;
-
+export type ValueType = ValueTypeUndefined | ValueTypeNull | ValueTypeString | ValueTypeNumber | ValueTypeBoolean | ValueTypeObject | ValueTypeArray | ValueTypeCustom | ValueTypeFunction;
 
 export type ControlTypeError = { type: 'control', kind: "error", value: any };
 export type ControlTypeContinue = { type: 'control', kind: "continue" };
@@ -28,26 +22,44 @@ export type LiteralExpressionString = { type: 'literal', kind: 'string', value: 
 export type LiteralExpressionNumber = { type: 'literal', kind: 'number', value: string };
 export type LiteralExpressionBoolean = { type: 'literal', kind: 'boolean', value: string };
 export type LiteralExpressionNull = { type: 'literal', kind: 'null', value: string };
-export type LiteralExpression = LiteralExpressionString | LiteralExpressionNumber | LiteralExpressionBoolean | LiteralExpressionNull;
+
+export type ObjectLiteralExpression = {
+    type: 'object',
+    properties: ObjectLiteralProperty[]
+}
+export type ObjectLiteralProperty = { key: string, value: Expression } | { type: 'spread', value: Expression }
+
+export type ArrayLiteralExpression = {
+    type: 'array',
+    items: Expression[]
+}
+
+export type LiteralExpression = LiteralExpressionString | LiteralExpressionNumber | LiteralExpressionBoolean | LiteralExpressionNull | ObjectLiteralExpression | ArrayLiteralExpression;
+
 
 export interface Scope {
-    [key: string]: ValueType
+    [key: string]: { kind: 'const' | 'var', value: ValueType }
 }
 
 export type ScopeResult = { type: 'scope', scope: Scope }
 
+export type CallExpression = {
+    type: "call";
+    name: string;
+    args: Expression[];
+}
+
 export type OperatorExpression = {
-    type: "expression";
+    type: "operation";
     operator: string;
     operands: any[];
 }
 
 export type LogicalExpression = {
     type: "logical";
-    operator: string;
+    operator: 'all' | 'any';
     operands: any[];
 }
-
 
 export interface QueryExpression {
     type: 'query',
@@ -78,22 +90,13 @@ export type KVIterable = {
     iterable: Expression;
 }
 
-export type ObjectLiteralExpression = {
-    type: 'object',
-    properties: ObjectLiteralProperty[]
-}
-
-export type ArrayLiteralExpression = {
-    type: 'array',
-    items: Expression[]
-}
-
-export type ObjectLiteralProperty = { key: string, value: Expression } | { type: 'spread', value: Expression }
 export type ReferenceExpression = { type: 'reference', path: ({ type: 'word', value: string } | Expression)[] }
 
-export type Expression = LiteralExpression | OperatorExpression | LogicalExpression | QueryExpression | ReferenceExpression | ObjectLiteralExpression | ArrayLiteralExpression;
+export type Expression = LiteralExpression | CallExpression | OperatorExpression | LogicalExpression | QueryExpression | ReferenceExpression;
 
-export type StatementDeclare = { type: 'declare', typeof: 'var', name: string, value: Expression };
+export type StatementDeclareConstant = { type: 'declare', kind: 'const', name: string, value: Expression };
+export type StatementDeclareVariable = { type: 'declare', kind: 'var', name: string, value: Expression };
+export type StatementDeclareFunction = { type: 'declare', kind: 'function', name: string, args: FunctionArgument[]; statements: Statement[] };
 export type StatementAssignment = { type: 'assignment', name: string, value: Expression };
 export type StatementConditional = { type: 'conditional', statements: ConditionalStatement[] };
 export type StatementWhile = { type: 'loop', kind: 'while', condition: Expression, statements: Statement[] };
@@ -101,26 +104,30 @@ export type StatementFor = { type: 'loop', kind: 'for', base: Statement, step: S
 export type StatementEach = { type: 'loop', kind: 'scan', k?: string, v: string; iterable: Expression; statements: Statement[] };
 
 export type ConditionalStatement = { condition: Expression, statements: Statement[] };
+export type FunctionArgument = { name: string, default: Expression };
+export type Statement = StatementDeclareConstant | StatementDeclareVariable | StatementDeclareFunction | StatementAssignment | StatementConditional | StatementWhile | StatementEach | StatementFor | ControlType;
 
-export type Statement = StatementDeclare | StatementAssignment | StatementConditional | StatementWhile | StatementEach | StatementFor | ControlType;
-
-const TYPES = {
-    Expression: "expression",
-    Assignment: "assignment",
-    Declare: "declare",
-    Conditional: "conditional",
-    Loop: "loop",
-    Literal: "literal",
-    Array: "array",
-    Object: "object",
-    Lambda: "lambda",
-    Reference: "reference",
-    Query: "query",
-    Call: "call",
-    Flow: "flow",
-    Spread: "spread",
-    Cluster: "cluster",
-    Constant: "constant",
-    Wildcard: "wildcard",
-    Yield: "yield"
+export const TYPES = {
+    Expression: 'expression',
+    Default: 'default',
+    Logical: 'logical',
+    Assignment: 'assignment',
+    Declare: 'declare',
+    Control: 'control',
+    Conditional: 'conditional',
+    Loop: 'loop',
+    Literal: 'literal',
+    Array: 'array',
+    Object: 'object',
+    Lambda: 'lambda',
+    Reference: 'reference',
+    Query: 'query',
+    Call: 'call',
+    Match: 'match',
+    Spread: 'spread',
+    Cluster: 'cluster',
+    Constant: 'constant',
+    Wildcard: 'wildcard',
+    Yield: 'yield',
+    Word: 'word'
 }

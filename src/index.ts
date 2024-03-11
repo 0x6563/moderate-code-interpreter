@@ -1,5 +1,5 @@
-import { Statement, ValueType, Expression, ControlType, ScopeResult } from "./types";
-import { Control, DynamicValue } from "./shared/value";
+import { Statement, ValueType, Expression, ControlType, ScopeResult, ObjectLiteralExpression, ValueTypeObject } from "./types";
+import { Control } from "./shared/value";
 import { Context } from "./shared/context";
 import { Assignment } from "./statements/assignment";
 import { Declare } from "./statements/declare";
@@ -14,12 +14,13 @@ import { ObjectLiteral } from "./expressions/object";
 import { Reference } from "./expressions/reference";
 import { Query } from "./expressions/query";
 import { ArrayLiteral } from "./expressions/array";
+import { Call } from "./expressions/call";
 
-export function Run(tree: any, data?: any) {
+export function Run(tree: any, data?: ValueTypeObject['value']) {
     const context = new Context();
     if (data)
         for (const key in data) {
-            context.declare(key, DynamicValue(data[key]));
+            context.declare('var', key, data[key]);
         }
     return Resolve(context, tree);
 }
@@ -89,7 +90,7 @@ export function ResolveValue(context: Context, obj: Expression | ValueType): Con
         return Literals[obj.kind](obj.value) as ValueType;
     }
 
-    if (obj.type == 'expression') {
+    if (obj.type == 'operation') {
         const operands = [];
         for (const o of obj.operands) {
             const r = ResolveValue(context, o);
@@ -101,6 +102,10 @@ export function ResolveValue(context: Context, obj: Expression | ValueType): Con
             return Control('error', `Unknown Operator Type ${obj.operator} for ${operands[0].kind}`);
         }
         return Expressions[operands[0].kind][obj.operator](operands);
+    }
+
+    if (obj.type == 'call') {
+        return Call(context, obj);
     }
 
     if (obj.type === 'query') {

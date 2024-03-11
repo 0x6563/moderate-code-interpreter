@@ -1,6 +1,6 @@
 head: ${
     const TYPES = {
-        Expression: 'expression',
+        Operation: 'operation',
         Default: 'default',
         Logical: 'logical',
         Assignment: 'assignment',
@@ -14,6 +14,7 @@ head: ${
         Lambda: 'lambda',
         Reference: 'reference',
         Query: 'query',
+        Run: 'run',
         Call: 'call',
         Match: 'match',
         Spread: 'spread',
@@ -68,6 +69,8 @@ lexer: {{
     keywords ->
         - when: /\$/ tag: "keyword" highlight: "keyword"
         - when: /set(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
+        - when: /var(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
+        - when: /const(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
         - when: /asc(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
         - when: /desc(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
         - when: /function(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
@@ -119,7 +122,7 @@ grammar: {{
 
     Statements -> 
         Statement : {{ [$0] }}
-        | Statements _ Statement : {{ $0.concat($2) }}
+        | Statements _ Statement : {{ ( $2.type == 'declare' &&  $2.kind =='function'? $0.unshift($2): $0.push($2)) && $0 }} // Hoist Functions
 
     Statement ->
         Assignment : {{ $0 }}
@@ -131,12 +134,13 @@ grammar: {{
         | ScanBlock : {{ $0 }}
         | ConditionLoop : {{ $0 }}
         | LoopBlock : {{ $0 }}
-        | "run" __ FunctionCall _ ";" : {{ $0 }}
+        | "run" __ Exp _ ";" : {{ { type: TYPES.Run, expression: $2 }}}
 
-    Assignment : {{ { type: TYPES.Assignment, name: $0,  value: $4 } }} ->
-        Reference _ "=" _ Exp _ ";" 
+    Assignment ->
+        Reference _ "=" _ Exp _ ";" : {{ { type: TYPES.Assignment, name: $0,  value: $4 } }}
+        | "set" __ Reference _ "=" _ Exp _ ";" : {{ { type: TYPES.Assignment, name: $2,  value: $6 } }}
 
-    Assignment : {{ { type: TYPES.Assignment, name: $0,  value: { type: TYPES.Expression, operator: $2.value[0], operands: [$0, $4] } } }} ->
+    Assignment : {{ { type: TYPES.Assignment, name: $0,  value: { type: TYPES.Operation, operator: $2.value[0], operands: [$0, $4] } } }} ->
          Reference _ "+=" _ Exp _ ";"
         | Reference _ "-=" _ Exp _ ";"
         | Reference _ "/=" _ Exp _ ";"
@@ -144,7 +148,8 @@ grammar: {{
         | Reference _ "%=" _ Exp _ ";"
 
     DeclareVar ->
-        "set" __ Word _ "=" _ Exp _ ";" : {{ { type: TYPES.Declare, kind: $0.value, name: $2, value: $6 } }}
+        "var" __ Word _ "=" _ Exp _ ";" : {{ { type: TYPES.Declare, kind: 'var', name: $2, value: $6 } }}
+        | "const" __ Word _ "=" _ Exp _ ";" : {{ { type: TYPES.Declare, kind: 'const', name: $2, value: $6 } }}
 
     Return ->
         "return" _ Exp:exp _ ";" : {{ { type: TYPES.Control, kind: "return", value: $exp } }}
@@ -166,9 +171,9 @@ grammar: {{
 
     ConditionLoop ->
        "while" _ Exp:condition _ Block:block : {{ { type: TYPES.Loop, kind:'while', condition: $condition, statements: $block } }}
-        | "until" _ Exp:condition _ Block:block : {{ { type: TYPES.Loop, kind:'while', condition: { type: TYPES.Expression, operator: "!", operands: [$condition] }, statements: $block } }}
+        | "until" _ Exp:condition _ Block:block : {{ { type: TYPES.Loop, kind:'while', condition: { type: TYPES.Operation, operator: "!", operands: [$condition] }, statements: $block } }}
         | "do" _ Block:block __ "while" _ Exp:condition : {{ { type: TYPES.Loop, kind:'while', condition: $condition, statements: $block } }}
-        | "do" _ Block:block __ "until" _ Exp:condition : {{ { type: TYPES.Loop, kind:'while', condition: { type: TYPES.Expression, operator: "!", operands: [$condition] }, statements: $block } }}
+        | "do" _ Block:block __ "until" _ Exp:condition : {{ { type: TYPES.Loop, kind:'while', condition: { type: TYPES.Operation, operator: "!", operands: [$condition] }, statements: $block } }}
 
     LoopBlock ->
         "for" _ "(" _ DeclareVar:base  _ Exp:condition _ ";" _ Assignment:step _ ")" _ Block:block : {{ { type: TYPES.Loop, kind:'for', base: $base, step: $step, condition: $condition, statements: $block } }}
@@ -196,7 +201,7 @@ grammar: {{
          ExpAnd _ "and" _ ExpCompare  : {{ { type: TYPES.Logical, operator: "all", operands: [$0, $4] } }}
         | ExpCompare : {{ $0 }}
 
-    ExpCompare : {{ { type: TYPES.Expression, operator: $2.value, operands: [$0, $4] } }} ->
+    ExpCompare : {{ { type: TYPES.Operation, operator: $2.value, operands: [$0, $4] } }} ->
         ExpCompare _ "<"  _ ExpConcat
         | ExpCompare _ ">"  _ ExpConcat
         | ExpCompare _ "<=" _ ExpConcat
@@ -204,32 +209,32 @@ grammar: {{
         | ExpCompare _ "!=" _ ExpConcat
         | ExpCompare _ "==" _ ExpConcat
         | ExpCompare _ "like" _ ExpConcat
-        | ExpCompare _ "within" _ Range : {{ { type: TYPES.Expression, operator: $2.value, operands: [$0, $4.low, $4.high] } }}
-        | ExpCompare _ "between" _ Range : {{ { type: TYPES.Expression, operator: $2.value, operands: [$0, $4.low, $4.high] } }}
+        | ExpCompare _ "within" _ Range : {{ { type: TYPES.Operation, operator: $2.value, operands: [$0, $4.low, $4.high] } }}
+        | ExpCompare _ "between" _ Range : {{ { type: TYPES.Operation, operator: $2.value, operands: [$0, $4.low, $4.high] } }}
         | ExpConcat : {{ $0 }}
 
-    ExpConcat : {{ { type: TYPES.Expression, operator: $2.value, operands: [$0, $4] } }} ->
+    ExpConcat : {{ { type: TYPES.Operation, operator: $2.value, operands: [$0, $4] } }} ->
         ExpSum _ ".." _ ExpConcat
         | ExpSum : {{ $0 }}
 
-    ExpSum : {{ { type: TYPES.Expression, operator: $2.value, operands: [$0, $4] } }} ->
+    ExpSum : {{ { type: TYPES.Operation, operator: $2.value, operands: [$0, $4] } }} ->
         ExpSum _ "+" _ ExpProduct
         | ExpSum _ "-" _ ExpProduct
         | ExpProduct : {{ $0 }}
 
-    ExpProduct : {{ { type: TYPES.Expression, operator: $2.value, operands: [$0, $4] } }} ->
+    ExpProduct : {{ { type: TYPES.Operation, operator: $2.value, operands: [$0, $4] } }} ->
         ExpProduct _ "*" _ ExpUnary
         | ExpProduct _ "/" _ ExpUnary
         | ExpProduct _ "%" _ ExpUnary
         | ExpUnary : {{ $0 }}
 
-    ExpUnary : {{ { type: TYPES.Expression, operator: "!", operands: [$2] } }} ->
+    ExpUnary : {{ { type: TYPES.Operation, operator: "!", operands: [$2] } }} ->
         "!" _ ExpPower
         | "not" _ ExpPower
         | ExpPower : {{ $0 }}
 
     ExpPower ->
-        Atom _ "^" _ ExpPower : {{ { type: TYPES.Expression, operator: $2.value, operands: [$0, $4] } }}
+        Atom _ "^" _ ExpPower : {{ { type: TYPES.Operation, operator: $2.value, operands: [$0, $4] } }}
         | Atom : {{ $0 }}
 
     Atom : {{ $0 }} ->
@@ -317,14 +322,14 @@ grammar: {{
         | Word _ "=>" _ Exp:expression : {{ { type: TYPES.Lambda, arguments: $2, expression: $expression  } }}
 
     FunctionArg -> Word : {{ { name: $0 } }}
-        | Word _ "=" _ Atom : {{ { name: $0, default: $4 } }}
+        | Word _ "=" _ Exp : {{ { name: $0, default: $4 } }}
 
     FunctionArg_list -> FunctionArg : {{ [$0] }}
         | FunctionArg_list _ "," _ FunctionArg : {{ $0.concat($4) }}
 
     PropName : {{ $0 }} -> String | Word 
 
-    FunctionCall -> Word:name _ "(" _ Exp_list:args _  ")" : {{ { type: TYPES.Call, name: $name,args:$args } }}
+    FunctionCall -> Word:name _ "(" _ Exp_list:args _  ")" : {{ { type: TYPES.Call, name: $name, args: $args } }}
         | Word:name _ "(" _ ")" : {{ { type: TYPES.Call, name: $name, args: [] } }}
 
     VariadicLogic : {{ { type: TYPES.Logical, operator: $0.value, operands: $4 } }}-> "any" _ "{" _ Exp_ss _  ( ";" _ )? "}"

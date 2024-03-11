@@ -1,5 +1,5 @@
 import { ControlType, ValueType } from "../types";
-import { Control, DynamicValue } from "../shared/value";
+import { Control, DynamicValue, Value } from "../shared/value";
 
 export const Expressions = {
     number: {
@@ -38,7 +38,7 @@ export const Expressions = {
         'like': TypeSafeCall(['array', 'array'], (a, b) => a == b),
         '==': TypeSafeCall(['array', 'array'], (a, b) => a === b),
         '!=': TypeSafeCall(['array', 'array'], (a, b) => a != b),
-        '..': TypeSafeCall(['array', 'array'], (a, b) => [...a, ...b]),
+        '..': TypeSafeCall(['array', 'array'], (a, b) => Value('array', [...a, ...b]), true),
     },
     object: {
         'like': TypeSafeCall(['object', 'object'], (a, b) => a == b),
@@ -47,7 +47,8 @@ export const Expressions = {
         '..': TypeSafeCall(['object', 'object'], (a, b) => ({ ...a, ...b })),
     }
 }
-function TypeSafeCall(types: string[], call: (...args: any[]) => any): (values: ValueType[]) => ValueType | ControlType {
+
+function TypeSafeCall(types: string[], call: (...args: any[]) => any, preserve?: boolean): (values: ValueType[]) => ValueType | ControlType {
     return (values: ValueType[]) => {
         const args = [];
         for (let i = 0; i < types.length; i++) {
@@ -59,9 +60,10 @@ function TypeSafeCall(types: string[], call: (...args: any[]) => any): (values: 
             args.push(v.value);
         }
         const result = call(...args);
-        return DynamicValue(result);
+        return preserve ? result : DynamicValue(result);
     }
 }
+
 function NotImplemented(operator) {
     return Control('error', `This "${operator}" operator is not yet implemented.`);
 }

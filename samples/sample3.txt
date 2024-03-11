@@ -1,4 +1,4 @@
-set items = [
+var items = [
    {k: {i: 1}},
    {k: {i: 2}},
    {k: {i: 3}},

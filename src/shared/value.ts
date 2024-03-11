@@ -14,7 +14,41 @@ export function Control(kind: ControlType['kind'], value): ControlType {
 }
 
 export function DynamicValue(value: any) {
+    const valuetype = GetValueType(value);
+    if (valuetype == 'array') {
+        return Value('array', value.map(v => DynamicValue(v)))
+    }
+    if (valuetype == 'object') {
+        const r = Object.assign(null);
+        for (const key in value) {
+            r[key] = DynamicValue(value[key]);
+        }
+        return Value('object', r);
+    }
     return Value(GetValueType(value) as any, value);
+}
+
+export function Marshal(value: any) {
+    return DynamicValue(value);
+}
+
+export function Unmarshal(value: ValueType) {
+    if (value.kind == 'array') {
+        return value.value.map(v => Unmarshal(v))
+    }
+    if (value.kind == 'object') {
+        const r = Object.assign(null);
+        for (const key in value.value) {
+            r[key] = Unmarshal(value[key]);
+        }
+        return r;
+    }
+    if (value.kind == 'function') {
+        return undefined;
+    }
+    if (value.kind == 'custom')
+        return undefined;
+    return value.value;
 }
 
 export function GetValueType(r: any) {
