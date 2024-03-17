@@ -5,7 +5,7 @@
         "removeComments": true,
         "allowJs": true,
         "preserveConstEnums": true,
-        "outDir": "./build",
+        "outDir": "./dist",
         "sourceMap": true,
         "target": "ESNext",
         "experimentalDecorators": true,

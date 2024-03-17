@@ -3,7 +3,7 @@
   "name": "moderate-code-interpreter",
   "version": "0.0.0",
   "description": "",
-  "main": "/build/index.js",
+  "main": "/dist/index.js",
   "scripts": {
     "build": "tsc --build",
     "compile": "tsx compile.ts",
