@@ -4,7 +4,23 @@ Moderate Code Interpreter is a basic interpreter that can run in the browser. It
 
 # Samples
 
-## Sample1
+## Array Concat
+```
+return Merge(["abc"],["def"]);
+
+function Merge(a, b){
+    return [123] .. a .. b;
+}
+```
+
+## Array Push
+```
+var a = [];
+a += 1 + 2;
+a += 3;
+```
+
+## Complex Query
 ```
 var a = query o in orders 
 filter all { 
@@ -40,12 +56,7 @@ sort o.id
 segment 0 to 100;
 ```
 
-## Sample2
-```
-var a = 2;
-```
-
-## Sample3
+## Filter Array Objects
 ```
 var items = [
    {k: {i: 1}},
@@ -65,14 +76,15 @@ filter all {
 list o;
 ```
 
-## Sample4
+## Loop Statement
 ```
-var a = 3;
-var b = 4; 
-return a + b;
+var i = 100000;
+while( i > 0 ){
+    i -= 1;
+}
 ```
 
-## Sample5
+## Multiple Condition Expression
 ```
 all {
  1 < 2;
@@ -81,31 +93,7 @@ all {
 }
 ```
 
-## Sample6
-```
-return Merge(["abc"],["def"]);
-
-function Merge(a, b){
-    return [123] .. a .. b;
-}
-```
-
-## Sample7
-```
-var i = 100000;
-while( i > 0 ){
-    i -= 1;
-}
-```
-
-## Sample8
-```
-var a = [];
-a += 1 + 2;
-a += 3;
-```
-
-## Sample9
+## Reference Assignment
 ```
 var a ={
     b: 2,
@@ -115,4 +103,16 @@ var a ={
 };
 
 a.c.d = 7;
+```
+
+## Simple Math
+```
+var a = 3;
+var b = 4; 
+return a + b;
+```
+
+## Variable Declaration
+```
+var a = 2;
 ```
