@@ -32,8 +32,6 @@ lexer: {{
         - when: /\d+/ tag: "digits" highlight: "number"
         - when: /"(?:\\["bfnrt\/\\]|\\u[a-fA-F0-9]{4}|[^"\\])*"/ highlight: "string" tag: "string"
         - when: /[_a-zA-Z][_a-zA-Z\d]*/ tag: "word"
-        - when: "..." tag: "l_spread" highlight: "keyword"
-        - when: ".." tag: "l_concat" highlight: "keyword"
         - when: "=>" tag: "l_arrow" highlight: "keyword"
         - when: "==" tag: "l_eqeq" highlight: "keyword"
         - when: ">=" tag: "l_gteq" highlight: "keyword"
@@ -43,6 +41,8 @@ lexer: {{
         - when: "/=" tag: "l_div" highlight: "keyword"
         - when: "%=" tag: "l_mod" highlight: "keyword"
         - when: "*=" tag: "l_mul" highlight: "keyword"
+        - when: "..." tag: "l_spread" highlight: "keyword"
+        - when: ".." tag: "l_concat" highlight: "keyword"
         - when: "=" tag: "l_eq"
         - when: ">" tag: "l_gt" highlight: "keyword"
         - when: "<" tag: "l_lt" highlight: "keyword"
@@ -137,10 +137,10 @@ grammar: {{
         | "run" __ Exp _ ";" : {{ { type: TYPES.Run, expression: $2 }}}
 
     Assignment ->
-        Reference _ "=" _ Exp _ ";" : {{ { type: TYPES.Assignment, name: $0,  value: $4 } }}
-        | "set" __ Reference _ "=" _ Exp _ ";" : {{ { type: TYPES.Assignment, name: $2,  value: $6 } }}
+        Reference _ "=" _ Exp _ ";" : {{ { type: TYPES.Assignment, reference: $0,  value: $4 } }}
+        | "set" __ Reference _ "=" _ Exp _ ";" : {{ { type: TYPES.Assignment, reference: $2,  value: $6 } }}
 
-    Assignment : {{ { type: TYPES.Assignment, name: $0,  value: { type: TYPES.Operation, operator: $2.value[0], operands: [$0, $4] } } }} ->
+    Assignment : {{ { type: TYPES.Assignment, reference: $0,  value: { type: TYPES.Operation, operator: $2.value[0], operands: [$0, $4] } } }} ->
          Reference _ "+=" _ Exp _ ";"
         | Reference _ "-=" _ Exp _ ";"
         | Reference _ "/=" _ Exp _ ";"

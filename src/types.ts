@@ -90,14 +90,15 @@ export type KVIterable = {
     iterable: Expression;
 }
 
-export type ReferenceExpression = { type: 'reference', path: ({ type: 'word', value: string } | Expression)[] }
+export type ReferenceExpression = { type: 'reference', path: ReferencePath }
 
+export type ReferencePath = [{ type: 'word', value: string }, ...Expression[]];
 export type Expression = LiteralExpression | CallExpression | OperatorExpression | LogicalExpression | QueryExpression | ReferenceExpression;
 
 export type StatementDeclareConstant = { type: 'declare', kind: 'const', name: string, value: Expression };
 export type StatementDeclareVariable = { type: 'declare', kind: 'var', name: string, value: Expression };
 export type StatementDeclareFunction = { type: 'declare', kind: 'function', name: string, args: FunctionArgument[]; statements: Statement[] };
-export type StatementAssignment = { type: 'assignment', name: string, value: Expression };
+export type StatementAssignment = { type: 'assignment', reference: ReferenceExpression, value: Expression };
 export type StatementConditional = { type: 'conditional', statements: ConditionalStatement[] };
 export type StatementWhile = { type: 'loop', kind: 'while', condition: Expression, statements: Statement[] };
 export type StatementFor = { type: 'loop', kind: 'for', base: Statement, step: Statement, condition: Expression, statements: Statement[] };

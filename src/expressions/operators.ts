@@ -39,6 +39,7 @@ export const Expressions = {
         '==': TypeSafeCall(['array', 'array'], (a, b) => a === b),
         '!=': TypeSafeCall(['array', 'array'], (a, b) => a != b),
         '..': TypeSafeCall(['array', 'array'], (a, b) => Value('array', [...a, ...b]), true),
+        '+': TypeSafeCall(['array', 'any'], (a, b) => Value('array', a.push(b) && a), true),
     },
     object: {
         'like': TypeSafeCall(['object', 'object'], (a, b) => a == b),

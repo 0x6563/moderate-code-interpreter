@@ -27,5 +27,12 @@ console.log();
         }
         console.log();
     }
+    const runstart = performance.now();
 
+    var i = 100000;
+    while (i > 0) {
+        i -= 1;
+    }
+    const runtime = (performance.now() - runstart);
+    console.log('Executed in ' + runtime.toFixed(2) + 'ms')
 })()

@@ -54,13 +54,13 @@ function GWLanguage(){
                     { name: "Statement", symbols: [ { literal: "run" }, "__", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Run, expression: data[2] }; } }
                 ],
                 Assignment: [
-                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, name: data[0],  value: data[4] }; } },
-                    { name: "Assignment", symbols: [ { literal: "set" }, "__", "Reference", "_", { literal: "=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, name: data[2],  value: data[6] }; } },
-                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "+=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, name: data[0],  value: { type: TYPES.Operation, operator: data[2].value[0], operands: [data[0], data[4]] } }; } },
-                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "-=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, name: data[0],  value: { type: TYPES.Operation, operator: data[2].value[0], operands: [data[0], data[4]] } }; } },
-                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "/=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, name: data[0],  value: { type: TYPES.Operation, operator: data[2].value[0], operands: [data[0], data[4]] } }; } },
-                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "*=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, name: data[0],  value: { type: TYPES.Operation, operator: data[2].value[0], operands: [data[0], data[4]] } }; } },
-                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "%=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, name: data[0],  value: { type: TYPES.Operation, operator: data[2].value[0], operands: [data[0], data[4]] } }; } }
+                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, reference: data[0],  value: data[4] }; } },
+                    { name: "Assignment", symbols: [ { literal: "set" }, "__", "Reference", "_", { literal: "=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, reference: data[2],  value: data[6] }; } },
+                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "+=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, reference: data[0],  value: { type: TYPES.Operation, operator: data[2].value[0], operands: [data[0], data[4]] } }; } },
+                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "-=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, reference: data[0],  value: { type: TYPES.Operation, operator: data[2].value[0], operands: [data[0], data[4]] } }; } },
+                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "/=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, reference: data[0],  value: { type: TYPES.Operation, operator: data[2].value[0], operands: [data[0], data[4]] } }; } },
+                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "*=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, reference: data[0],  value: { type: TYPES.Operation, operator: data[2].value[0], operands: [data[0], data[4]] } }; } },
+                    { name: "Assignment", symbols: [ "Reference", "_", { literal: "%=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Assignment, reference: data[0],  value: { type: TYPES.Operation, operator: data[2].value[0], operands: [data[0], data[4]] } }; } }
                 ],
                 DeclareVar: [
                     { name: "DeclareVar", symbols: [ { literal: "var" }, "__", "Word", "_", { literal: "=" }, "_", "Exp", "_", { literal: ";" } ], postprocess: ({data}) => { return { type: TYPES.Declare, kind: 'var', name: data[2], value: data[6] }; } },
@@ -359,8 +359,6 @@ function GWLanguage(){
                         { when: /\d+/, tag: ["digits"], highlight: "number" },
                         { when: /"(?:\\["bfnrt\/\\]|\\u[a-fA-F0-9]{4}|[^"\\])*"/, tag: ["string"], highlight: "string" },
                         { when: /[_a-zA-Z][_a-zA-Z\d]*/, tag: ["word"] },
-                        { when: "...", tag: ["l_spread"], highlight: "keyword" },
-                        { when: "..", tag: ["l_concat"], highlight: "keyword" },
                         { when: "=>", tag: ["l_arrow"], highlight: "keyword" },
                         { when: "==", tag: ["l_eqeq"], highlight: "keyword" },
                         { when: ">=", tag: ["l_gteq"], highlight: "keyword" },
@@ -370,6 +368,8 @@ function GWLanguage(){
                         { when: "/=", tag: ["l_div"], highlight: "keyword" },
                         { when: "%=", tag: ["l_mod"], highlight: "keyword" },
                         { when: "*=", tag: ["l_mul"], highlight: "keyword" },
+                        { when: "...", tag: ["l_spread"], highlight: "keyword" },
+                        { when: "..", tag: ["l_concat"], highlight: "keyword" },
                         { when: "=", tag: ["l_eq"] },
                         { when: ">", tag: ["l_gt"], highlight: "keyword" },
                         { when: "<", tag: ["l_lt"], highlight: "keyword" },

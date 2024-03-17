@@ -1,6 +1,6 @@
 {
   "type": "module",
-  "name": "script-foundation",
+  "name": "moderate-code-interpreter",
   "version": "0.0.0",
   "description": "",
   "main": "/build/index.js",
@@ -10,7 +10,7 @@
     "test": "tsx test.ts"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "grammar-well": "^1.2.0"
   },

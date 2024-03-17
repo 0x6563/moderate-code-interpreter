@@ -1,3 +1,3 @@
-# Script Foundation
+# Moderate Code Interpreter
 
-Script Foundation is a basic scripting language that can run in the browser. Its target audience is business users and developer-adjacent roles, such as people who are spreadsheet wizards. By focusing on primitive functionality, it also serves as a foundation for domain-specific languages.
+Moderate Code Interpreter is a basic interpreter that can run in the browser. It input is designed to be easily comprehensible for end-users, allowing them to understand the intended functionality of the code. Moreover, it is crafted to be straightforward enough for developer-adjacent roles, such as spreadsheet wizards, to swiftly create their own scripts. The grammar is designed with extensibility in mind, by priortizing essential functionality and having a rudimentary aesthetic to writing statements and expressions. Ideally domain-specific syntax could be layered atop of this core language.
