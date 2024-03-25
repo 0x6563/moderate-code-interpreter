@@ -1,28 +1,32 @@
-import { Control } from "./shared/value";
-import { Context } from "./shared/context";
-import { Assignment } from "./statements/assignment";
-import { Declare } from "./statements/declare";
-import { If } from "./statements/if";
-import { Scan } from "./statements/scan";
-import { For } from "./statements/for";
-import { While } from "./statements/while";
-import { Expressions } from "./expressions/operators";
-import { Literals } from "./expressions/literals";
-import { Logical } from "./expressions/logical";
-import { ObjectLiteral } from "./expressions/object";
-import { Reference } from "./expressions/reference";
-import { Query } from "./expressions/query";
-import { ArrayLiteral } from "./expressions/array";
-import { Call } from "./expressions/call";
-export function Run(tree, data) {
-    const context = new Context();
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ResolveValue = exports.ResolveStatement = exports.ResolveStatements = exports.Resolve = exports.Run = void 0;
+const value_1 = require("./shared/value");
+const context_1 = require("./shared/context");
+const assignment_1 = require("./statements/assignment");
+const declare_1 = require("./statements/declare");
+const if_1 = require("./statements/if");
+const scan_1 = require("./statements/scan");
+const for_1 = require("./statements/for");
+const while_1 = require("./statements/while");
+const operators_1 = require("./expressions/operators");
+const literals_1 = require("./expressions/literals");
+const logical_1 = require("./expressions/logical");
+const object_1 = require("./expressions/object");
+const reference_1 = require("./expressions/reference");
+const query_1 = require("./expressions/query");
+const array_1 = require("./expressions/array");
+const call_1 = require("./expressions/call");
+function Run(tree, data) {
+    const context = new context_1.Context();
     if (data)
         for (const key in data) {
             context.declare('var', key, data[key]);
         }
     return Resolve(context, tree);
 }
-export function Resolve(context, tree) {
+exports.Run = Run;
+function Resolve(context, tree) {
     if (tree.expression) {
         return ResolveValue(context, tree.expression);
     }
@@ -34,7 +38,8 @@ export function Resolve(context, tree) {
         return { type: 'scope', scope: context.scope };
     }
 }
-export function ResolveStatements(context, statements) {
+exports.Resolve = Resolve;
+function ResolveStatements(context, statements) {
     for (const statement of statements) {
         let r = ResolveStatement(context, statement);
         if (r) {
@@ -42,44 +47,46 @@ export function ResolveStatements(context, statements) {
         }
     }
 }
-export function ResolveStatement(context, statement) {
+exports.ResolveStatements = ResolveStatements;
+function ResolveStatement(context, statement) {
     if (statement.type == 'assignment') {
-        return Assignment(context, statement);
+        return (0, assignment_1.Assignment)(context, statement);
     }
     if (statement.type == 'declare') {
-        return Declare(context, statement);
+        return (0, declare_1.Declare)(context, statement);
     }
     if (statement.type == 'conditional') {
-        return If(context, statement);
+        return (0, if_1.If)(context, statement);
     }
     if (statement.type == 'loop') {
         if (statement.kind == 'scan') {
-            return Scan(context, statement);
+            return (0, scan_1.Scan)(context, statement);
         }
         if (statement.kind == 'for') {
-            return For(context, statement);
+            return (0, for_1.For)(context, statement);
         }
         if (statement.kind == 'while') {
-            return While(context, statement);
+            return (0, while_1.While)(context, statement);
         }
     }
     if (statement.type == 'control') {
         if (statement.kind == 'break' || statement.kind == 'return') {
-            return Control(statement.kind, ResolveValue(context, statement.value));
+            return (0, value_1.Control)(statement.kind, ResolveValue(context, statement.value));
         }
         return statement;
     }
-    return Control('error', `Unhandled Statement: ${statement?.type}`);
+    return (0, value_1.Control)('error', `Unhandled Statement: ${statement?.type}`);
 }
-export function ResolveValue(context, obj) {
+exports.ResolveStatement = ResolveStatement;
+function ResolveValue(context, obj) {
     if (obj.type == 'value') {
         return obj;
     }
     if (obj.type == 'literal') {
-        if (!Literals[obj.kind]) {
-            return Control('error', `Unknown Literal Type ${obj.kind}`);
+        if (!literals_1.Literals[obj.kind]) {
+            return (0, value_1.Control)('error', `Unknown Literal Type ${obj.kind}`);
         }
-        return Literals[obj.kind](obj.value);
+        return literals_1.Literals[obj.kind](obj.value);
     }
     if (obj.type == 'operation') {
         const operands = [];
@@ -89,29 +96,30 @@ export function ResolveValue(context, obj) {
                 return r;
             operands.push(r);
         }
-        if (!(Expressions?.[operands[0].kind]?.[obj.operator])) {
-            return Control('error', `Unknown Operator Type ${obj.operator} for ${operands[0].kind}`);
+        if (!(operators_1.Expressions?.[operands[0].kind]?.[obj.operator])) {
+            return (0, value_1.Control)('error', `Unknown Operator Type ${obj.operator} for ${operands[0].kind}`);
         }
-        return Expressions[operands[0].kind][obj.operator](operands);
+        return operators_1.Expressions[operands[0].kind][obj.operator](operands);
     }
     if (obj.type == 'call') {
-        return Call(context, obj);
+        return (0, call_1.Call)(context, obj);
     }
     if (obj.type === 'query') {
-        return Query(context, obj);
+        return (0, query_1.Query)(context, obj);
     }
     if (obj.type === 'object') {
-        return ObjectLiteral(context, obj);
+        return (0, object_1.ObjectLiteral)(context, obj);
     }
     if (obj.type === 'array') {
-        return ArrayLiteral(context, obj);
+        return (0, array_1.ArrayLiteral)(context, obj);
     }
     if (obj.type == 'reference') {
-        return Reference(context, obj);
+        return (0, reference_1.Reference)(context, obj);
     }
     if (obj.type == 'logical') {
-        return Logical[obj.operator](context, obj.operands);
+        return logical_1.Logical[obj.operator](context, obj.operands);
     }
-    return Control('error', `Unhandled Expression: ${obj?.type}`);
+    return (0, value_1.Control)('error', `Unhandled Expression: ${obj?.type}`);
 }
+exports.ResolveValue = ResolveValue;
 //# sourceMappingURL=runner.js.map

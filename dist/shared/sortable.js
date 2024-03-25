@@ -1,4 +1,7 @@
-export class Sortable {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Sortable = void 0;
+class Sortable {
     compare;
     low;
     high;
@@ -68,4 +71,5 @@ export class Sortable {
         return low;
     }
 }
+exports.Sortable = Sortable;
 //# sourceMappingURL=sortable.js.map

@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const TYPES = {
     Operation: 'operation',
     Default: 'default',
@@ -438,5 +440,5 @@ function GWLanguage() {
         }
     };
 }
-export default GWLanguage;
+exports.default = GWLanguage;
 //# sourceMappingURL=grammar.js.map

@@ -1,18 +1,21 @@
-import { ResolveStatements, ResolveValue } from "../runner";
-import { Control, Value } from "../shared/value";
-export function Call(context, expression) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Call = void 0;
+const runner_1 = require("../runner");
+const value_1 = require("../shared/value");
+function Call(context, expression) {
     const r = context.get(expression.name);
     if (r.type == 'control') {
         return r;
     }
     if (r.kind != 'function') {
-        return Control('error', `${expression.name} is not callable`);
+        return (0, value_1.Control)('error', `${expression.name} is not callable`);
     }
     const callable = r.value;
     const sub = callable.context.fork();
     for (let i = 0; i < callable.args.length; i++) {
         if (expression.args[i]) {
-            const v = ResolveValue(context, expression.args[i]);
+            const v = (0, runner_1.ResolveValue)(context, expression.args[i]);
             if (v.type == 'control') {
                 return v;
             }
@@ -28,13 +31,14 @@ export function Call(context, expression) {
             }
         }
     }
-    const value = ResolveStatements(sub, callable.statements);
+    const value = (0, runner_1.ResolveStatements)(sub, callable.statements);
     if (value) {
         if (value.kind == 'return') {
             return value.value;
         }
         return value;
     }
-    return Value('undefined', undefined);
+    return (0, value_1.Value)('undefined', undefined);
 }
+exports.Call = Call;
 //# sourceMappingURL=call.js.map

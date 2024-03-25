@@ -1,13 +1,19 @@
-export function Wrap(type, kind, value) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Truthy = exports.GetValueType = exports.Unmarshal = exports.Marshal = exports.DynamicValue = exports.Control = exports.Value = exports.Wrap = void 0;
+function Wrap(type, kind, value) {
     return { type, kind, value };
 }
-export function Value(kind, value) {
+exports.Wrap = Wrap;
+function Value(kind, value) {
     return { type: 'value', kind, value };
 }
-export function Control(kind, value) {
+exports.Value = Value;
+function Control(kind, value) {
     return { type: 'control', kind, value };
 }
-export function DynamicValue(value) {
+exports.Control = Control;
+function DynamicValue(value) {
     const valuetype = GetValueType(value);
     if (valuetype == 'array') {
         return Value('array', value.map(v => DynamicValue(v)));
@@ -21,10 +27,12 @@ export function DynamicValue(value) {
     }
     return Value(GetValueType(value), value);
 }
-export function Marshal(value) {
+exports.DynamicValue = DynamicValue;
+function Marshal(value) {
     return DynamicValue(value);
 }
-export function Unmarshal(value) {
+exports.Marshal = Marshal;
+function Unmarshal(value) {
     if (value.kind == 'array') {
         return value.value.map(v => Unmarshal(v));
     }
@@ -42,13 +50,15 @@ export function Unmarshal(value) {
         return undefined;
     return value.value;
 }
-export function GetValueType(r) {
+exports.Unmarshal = Unmarshal;
+function GetValueType(r) {
     if (Array.isArray(r)) {
         return 'array';
     }
     return typeof r;
 }
-export function Truthy(val) {
+exports.GetValueType = GetValueType;
+function Truthy(val) {
     if (val.type == 'control') {
         return val;
     }
@@ -66,4 +76,5 @@ export function Truthy(val) {
     }
     return false;
 }
+exports.Truthy = Truthy;
 //# sourceMappingURL=value.js.map

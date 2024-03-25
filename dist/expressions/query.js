@@ -1,29 +1,32 @@
-import { ResolveValue } from "../runner";
-import { Iterate, IterateIterable } from "../shared/iterable";
-import { Control, Truthy, Value } from "../shared/value";
-import { Sortable } from "../shared/sortable";
-export function Query(context, query) {
-    const source = ResolveValue(context, query.source.iterable.iterable);
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Query = void 0;
+const runner_1 = require("../runner");
+const iterable_1 = require("../shared/iterable");
+const value_1 = require("../shared/value");
+const sortable_1 = require("../shared/sortable");
+function Query(context, query) {
+    const source = (0, runner_1.ResolveValue)(context, query.source.iterable.iterable);
     if (!source)
-        return Control('error', `Unable to query`);
+        return (0, value_1.Control)('error', `Unable to query`);
     if (source.type == 'control')
         return source;
     if (source.kind != 'array')
-        return Control('error', 'Unable to query non-array');
-    const low = query?.slice?.low ? ResolveValue(context, query.slice.low) : Value('number', 0);
+        return (0, value_1.Control)('error', 'Unable to query non-array');
+    const low = query?.slice?.low ? (0, runner_1.ResolveValue)(context, query.slice.low) : (0, value_1.Value)('number', 0);
     if (low.type == 'control')
         return low;
     if (low.kind != 'number')
-        return Control('error', `Unable to slice by ${low.kind}`);
-    const high = query?.slice?.high ? ResolveValue(context, query.slice.high) : Value('number', source.value.length);
+        return (0, value_1.Control)('error', `Unable to slice by ${low.kind}`);
+    const high = query?.slice?.high ? (0, runner_1.ResolveValue)(context, query.slice.high) : (0, value_1.Value)('number', source.value.length);
     if (high.type == 'control')
         return high;
     if (high.kind != 'number')
-        return Control('error', `Unable to slice by ${high.kind}`);
-    const include = query.filter ? (s) => Truthy(ResolveValue(s, query.filter)) : () => true;
+        return (0, value_1.Control)('error', `Unable to slice by ${high.kind}`);
+    const include = query.filter ? (s) => (0, value_1.Truthy)((0, runner_1.ResolveValue)(s, query.filter)) : () => true;
     const r = [];
     const sortMap = new WeakMap();
-    const sorter = new Sortable((a, b) => {
+    const sorter = new sortable_1.Sortable((a, b) => {
         const aa = sortMap.get(a);
         const bb = sortMap.get(b);
         if (aa == bb)
@@ -35,7 +38,7 @@ export function Query(context, query) {
             return -1;
         }
     }, low.value, high.value);
-    const loop = IterateIterable(context, query.source.iterable, (nested, k) => {
+    const loop = (0, iterable_1.IterateIterable)(context, query.source.iterable, (nested, k) => {
         const included = include(nested);
         if (typeof included == 'object')
             return included;
@@ -43,7 +46,7 @@ export function Query(context, query) {
             const o = nested.get(query.source.iterable.v);
             r.push(o);
             if (query.sort) {
-                const sortable = ResolveValue(nested, query.sort.expression);
+                const sortable = (0, runner_1.ResolveValue)(nested, query.sort.expression);
                 if (sortable.type == 'control')
                     return sortable;
                 sortMap.set(o, sortable.value);
@@ -53,7 +56,7 @@ export function Query(context, query) {
                 sorter.set.push(o);
             }
             if (query.yield.kind === 'first') {
-                return Control('break', o);
+                return (0, value_1.Control)('break', o);
             }
         }
     });
@@ -62,8 +65,8 @@ export function Query(context, query) {
     }
     const sorted = sorter.extract();
     const result = [];
-    const loop2 = Iterate(context, Value('array', sorted), query.source.iterable.k, query.source.iterable.v, (nested, k) => {
-        const r = ResolveValue(nested, query.yield.value);
+    const loop2 = (0, iterable_1.Iterate)(context, (0, value_1.Value)('array', sorted), query.source.iterable.k, query.source.iterable.v, (nested, k) => {
+        const r = (0, runner_1.ResolveValue)(nested, query.yield.value);
         if (r.type == 'control')
             return r;
         result.push(r.value);
@@ -74,6 +77,7 @@ export function Query(context, query) {
     if (query.yield.kind === 'first') {
         return result[0];
     }
-    return Value('array', result);
+    return (0, value_1.Value)('array', result);
 }
+exports.Query = Query;
 //# sourceMappingURL=query.js.map

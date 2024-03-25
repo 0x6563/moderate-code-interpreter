@@ -1,9 +1,13 @@
-import { ResolveValue } from "../runner";
-import { Control, Value } from "./value";
-export function IterateIterable(context, iterable, callback) {
-    return Iterate(context, ResolveValue(context, iterable.iterable), iterable.k, iterable.v, callback);
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Iterate = exports.IterateIterable = void 0;
+const runner_1 = require("../runner");
+const value_1 = require("./value");
+function IterateIterable(context, iterable, callback) {
+    return Iterate(context, (0, runner_1.ResolveValue)(context, iterable.iterable), iterable.k, iterable.v, callback);
 }
-export function Iterate(context, value, keyName, valueName, callback) {
+exports.IterateIterable = IterateIterable;
+function Iterate(context, value, keyName, valueName, callback) {
     let source;
     if (value.kind == 'array') {
         source = ArrayIterate(value.value);
@@ -12,7 +16,7 @@ export function Iterate(context, value, keyName, valueName, callback) {
         source = ObjectIterate(value.value);
     }
     else {
-        return Control('error', 'Non-iterable value');
+        return (0, value_1.Control)('error', 'Non-iterable value');
     }
     for (const [key, value] of source) {
         const nested = context.fork();
@@ -26,14 +30,15 @@ export function Iterate(context, value, keyName, valueName, callback) {
         }
     }
 }
+exports.Iterate = Iterate;
 function* ArrayIterate(ary) {
     for (let i = 0; i < ary.length; i++) {
-        yield [Value('number', i), ary[i]];
+        yield [(0, value_1.Value)('number', i), ary[i]];
     }
 }
 function* ObjectIterate(object) {
     for (const key in object) {
-        yield [Value('string', key), object[key]];
+        yield [(0, value_1.Value)('string', key), object[key]];
     }
 }
 //# sourceMappingURL=iterable.js.map
