@@ -11,11 +11,13 @@ console.log();
     for (const file of files) {
         try {
             console.log(file);
-            const { result, timing } = await Parse(Read(Fullpath(BaseDir, file)))
-            console.log('Parsed in ' + timing.toFixed(2) + 'ms');
-            if (result.results[0]) {
+            const runstart = performance.now();
+            const tree = Parse(Read(Fullpath(BaseDir, file)))
+            const runtime = (performance.now() - runstart);
+            console.log('Parsed in ' + runtime.toFixed(2) + 'ms');
+            if (tree) {
                 const runstart = performance.now();
-                const r = Run(result.results[0]);
+                const r = Run(tree);
                 const runtime = (performance.now() - runstart);
                 console.log(JSON.stringify(r) || '');
                 console.log('Executed in ' + runtime.toFixed(2) + 'ms')
