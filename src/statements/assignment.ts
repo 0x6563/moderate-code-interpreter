@@ -1,5 +1,5 @@
 import { Reference, ResolveReferencePathItem } from "../expressions/reference";
-import { ResolveValue } from "../index";
+import { ResolveValue } from "../runner";
 import { Context } from "../shared/context";
 import { Control } from "../shared/value";
 import { ControlType, ReferencePath, StatementAssignment } from "../types";

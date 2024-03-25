@@ -1,4 +1,4 @@
-import { ResolveStatements, ResolveValue } from "../index";
+import { ResolveStatements, ResolveValue } from "../runner";
 import { Context } from "../shared/context";
 import { Truthy } from "../shared/value";
 import { StatementWhile } from "../types";

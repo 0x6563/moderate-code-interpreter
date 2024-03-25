@@ -1,5 +1,5 @@
 
-import { ResolveValue } from "../index";
+import { ResolveValue } from "../runner";
 import { ControlType, Expression, ValueType } from "../types";
 import { Control, Value } from "./value";
 import { Context } from "./context";

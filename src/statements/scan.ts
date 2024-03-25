@@ -1,4 +1,4 @@
-import { ResolveStatements } from "../index";
+import { ResolveStatements } from "../runner";
 import { Context } from "../shared/context";
 import { IterateIterable } from "../shared/iterable";
 import { StatementEach } from "../types";

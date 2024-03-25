@@ -1,4 +1,4 @@
-import { ResolveValue } from "../index";
+import { ResolveValue } from "../runner";
 import { Context } from "../shared/context";
 import { Control, Wrap } from "../shared/value";
 import { ControlType, ObjectLiteralExpression, ValueTypeObject } from "../types";

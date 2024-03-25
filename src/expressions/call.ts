@@ -1,4 +1,4 @@
-import { ResolveStatements, ResolveValue } from "../index";
+import { ResolveStatements, ResolveValue } from "../runner";
 import { Context } from "../shared/context";
 import { Control, Value } from "../shared/value";
 import { CallExpression } from "../types";

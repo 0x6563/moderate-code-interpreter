@@ -1,4 +1,4 @@
-import { ResolveValue } from "../index";
+import { ResolveValue } from "../runner";
 import { QueryExpression, ValueType } from "../types";
 import { Iterate, IterateIterable } from "../shared/iterable";
 import { Context } from "../shared/context";
