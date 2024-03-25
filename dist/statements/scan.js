@@ -1,4 +1,4 @@
-import { ResolveStatements } from "../index";
+import { ResolveStatements } from "../runner";
 import { IterateIterable } from "../shared/iterable";
 export function Scan(context, statement) {
     return IterateIterable(context, statement, (nested, k) => ResolveStatements(nested, statement.statements));

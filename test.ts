@@ -1,6 +1,5 @@
 import { readdirSync } from "fs";
-import { ParseSample } from "./src/parse";
-import { Run } from "./src/index";
+import { Run, Parse } from "./src/index";
 import { Fullpath, Read } from "./utils/file";
 
 const BaseDir = './samples/';
@@ -12,7 +11,7 @@ console.log();
     for (const file of files) {
         try {
             console.log(file);
-            const { result, timing } = await ParseSample(Read(Fullpath(BaseDir, file)))
+            const { result, timing } = await Parse(Read(Fullpath(BaseDir, file)))
             console.log('Parsed in ' + timing.toFixed(2) + 'ms');
             if (result.results[0]) {
                 const runstart = performance.now();

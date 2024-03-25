@@ -1,4 +1,4 @@
-import { ResolveStatements, ResolveValue } from "../index";
+import { ResolveStatements, ResolveValue } from "../runner";
 import { Truthy } from "../shared/value";
 export function If(context, { statements }) {
     for (const statement of statements) {

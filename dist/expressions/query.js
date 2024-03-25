@@ -1,4 +1,4 @@
-import { ResolveValue } from "../index";
+import { ResolveValue } from "../runner";
 import { Iterate, IterateIterable } from "../shared/iterable";
 import { Control, Truthy, Value } from "../shared/value";
 import { Sortable } from "../shared/sortable";

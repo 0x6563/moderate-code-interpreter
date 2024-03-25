@@ -1,4 +1,4 @@
-import { ResolveStatements, ResolveValue } from "../index";
+import { ResolveStatements, ResolveValue } from "../runner";
 import { Truthy } from "../shared/value";
 export function While(context, statement) {
     let truthy;

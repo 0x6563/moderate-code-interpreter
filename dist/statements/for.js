@@ -1,4 +1,4 @@
-import { ResolveStatement, ResolveStatements, ResolveValue } from "../index";
+import { ResolveStatement, ResolveStatements, ResolveValue } from "../runner";
 import { Truthy } from "../shared/value";
 export function For(context, statement) {
     const nested = context.fork();

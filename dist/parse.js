@@ -1,10 +1,10 @@
-import { Parse } from 'grammar-well/build/index';
+import { Parse as GWParser } from 'grammar-well/build/index';
 import grammar from './grammar.js';
-export function ParseSample(sample) {
+export function Parse(sample) {
     try {
         const response = {};
         const parseStart = performance.now();
-        response.result = Parse(grammar(), sample, { algorithm: 'earley' });
+        response.result = GWParser(grammar(), sample, { algorithm: 'earley' });
         response.timing = performance.now() - parseStart;
         return response;
     }

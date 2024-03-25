@@ -1,4 +1,4 @@
-import { ResolveValue } from "../index";
+import { ResolveValue } from "../runner";
 import { Control } from "../shared/value";
 export function Reference(context, { path }) {
     const k = ResolveReferencePathItem(context, path[0]);

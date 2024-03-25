@@ -1,4 +1,4 @@
-import { ResolveValue } from "../index";
+import { ResolveValue } from "../runner";
 import { Control, Value } from "./value";
 export function IterateIterable(context, iterable, callback) {
     return Iterate(context, ResolveValue(context, iterable.iterable), iterable.k, iterable.v, callback);

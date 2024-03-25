@@ -1,4 +1,4 @@
-import { ResolveValue } from "../index";
+import { ResolveValue } from "../runner";
 import { Truthy, Value } from "../shared/value";
 export const Logical = {
     'all': (context, operands) => {

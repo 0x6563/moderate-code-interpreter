@@ -1,5 +1,5 @@
 import { Reference, ResolveReferencePathItem } from "../expressions/reference";
-import { ResolveValue } from "../index";
+import { ResolveValue } from "../runner";
 import { Control } from "../shared/value";
 export function Assignment(context, statement) {
     const r = ResolveValue(context, statement.value);

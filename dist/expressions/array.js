@@ -1,4 +1,4 @@
-import { ResolveValue } from "../index";
+import { ResolveValue } from "../runner";
 import { Value } from "../shared/value";
 export function ArrayLiteral(context, expression) {
     const result = [];

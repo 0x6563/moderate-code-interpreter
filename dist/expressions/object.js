@@ -1,4 +1,4 @@
-import { ResolveValue } from "../index";
+import { ResolveValue } from "../runner";
 import { Control, Wrap } from "../shared/value";
 export function ObjectLiteral(context, expression) {
     const result = {};

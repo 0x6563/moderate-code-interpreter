@@ -1,4 +1,4 @@
-import { ResolveStatements, ResolveValue } from "../index";
+import { ResolveStatements, ResolveValue } from "../runner";
 import { Control, Value } from "../shared/value";
 export function Call(context, expression) {
     const r = context.get(expression.name);
