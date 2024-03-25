@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TYPES = void 0;
-exports.TYPES = {
+export const TYPES = {
     Expression: 'expression',
     Default: 'default',
     Logical: 'logical',

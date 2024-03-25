@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "module": "CommonJS",
+        "module": "ESNext",
         "noImplicitAny": false,
         "removeComments": true,
         "allowJs": true,

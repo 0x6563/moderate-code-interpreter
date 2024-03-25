@@ -1,19 +1,23 @@
 {
   "type": "module",
   "name": "moderate-code-interpreter",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
-  "main": "/dist/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc --build",
     "compile": "tsx compile.ts",
     "test": "tsx test.ts",
     "readme": "tsx readme.ts"
   },
-  "author": "",
+  "author": "0x6563",
   "license": "LGPL-3.0",
   "dependencies": {
     "grammar-well": "^1.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/0x6563/moderate-code-interpreter.git"
   },
   "devDependencies": {
     "@types/node": "^20.11.25",
