@@ -457,9 +457,7 @@ declare function GWLanguage(): {
             }[];
             String: {
                 name: string;
-                symbols: {
-                    token: string;
-                }[];
+                symbols: string[];
                 postprocess: ({ data }: {
                     data: any;
                 }) => {
@@ -467,6 +465,38 @@ declare function GWLanguage(): {
                     kind: string;
                     value: any;
                 };
+            }[];
+            DString$RPT01x1: {
+                name: string;
+                symbols: string[];
+                postprocess: ({ data }: {
+                    data: any;
+                }) => any;
+            }[];
+            DString: {
+                name: string;
+                symbols: (string | {
+                    token: string;
+                })[];
+                postprocess: ({ data }: {
+                    data: any;
+                }) => string;
+            }[];
+            DString$RPT01x2: {
+                name: string;
+                symbols: string[];
+                postprocess: ({ data }: {
+                    data: any;
+                }) => any;
+            }[];
+            stringInner: {
+                name: string;
+                symbols: (string | {
+                    token: string;
+                })[];
+                postprocess: ({ data }: {
+                    data: any;
+                }) => any;
             }[];
             Array: {
                 name: string;
@@ -870,26 +900,65 @@ declare function GWLanguage(): {
                     when?: undefined;
                     tag?: undefined;
                     highlight?: undefined;
+                    goto?: undefined;
+                    inset?: undefined;
+                    pop?: undefined;
                 } | {
                     when: RegExp;
                     tag: string[];
                     highlight: string;
                     import?: undefined;
+                    goto?: undefined;
+                    inset?: undefined;
+                    pop?: undefined;
+                } | {
+                    when: RegExp;
+                    tag: string[];
+                    highlight: string;
+                    goto: string;
+                    import?: undefined;
+                    inset?: undefined;
+                    pop?: undefined;
                 } | {
                     when: RegExp;
                     tag: string[];
                     import?: undefined;
                     highlight?: undefined;
+                    goto?: undefined;
+                    inset?: undefined;
+                    pop?: undefined;
                 } | {
                     when: string;
                     tag: string[];
                     highlight: string;
                     import?: undefined;
+                    goto?: undefined;
+                    inset?: undefined;
+                    pop?: undefined;
                 } | {
                     when: string;
                     tag: string[];
                     import?: undefined;
                     highlight?: undefined;
+                    goto?: undefined;
+                    inset?: undefined;
+                    pop?: undefined;
+                } | {
+                    when: string;
+                    tag: string[];
+                    highlight: string;
+                    inset: number;
+                    import?: undefined;
+                    goto?: undefined;
+                    pop?: undefined;
+                } | {
+                    when: string;
+                    tag: string[];
+                    pop: number;
+                    highlight: string;
+                    import?: undefined;
+                    goto?: undefined;
+                    inset?: undefined;
                 })[];
             };
             keywords: {
@@ -899,6 +968,34 @@ declare function GWLanguage(): {
                     tag: string[];
                     highlight: string;
                 }[];
+            };
+            dstring: {
+                name: string;
+                rules: ({
+                    when: RegExp;
+                    tag: string[];
+                    highlight: string;
+                    pop?: undefined;
+                } | {
+                    when: string;
+                    tag: string[];
+                    pop: number;
+                    highlight: string;
+                })[];
+            };
+            sstring: {
+                name: string;
+                rules: ({
+                    when: RegExp;
+                    tag: string[];
+                    highlight: string;
+                    pop?: undefined;
+                } | {
+                    when: string;
+                    tag: string[];
+                    pop: number;
+                    highlight: string;
+                })[];
             };
         };
     };

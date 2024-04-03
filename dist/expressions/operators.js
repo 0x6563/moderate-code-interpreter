@@ -1,5 +1,5 @@
 import { Control, DynamicValue, Value } from "../shared/value";
-export const Expressions = {
+export const Operators = {
     number: {
         'like': TypeSafeCall(['number', 'number'], (a, b) => a === b),
         '==': TypeSafeCall(['number', 'number'], (a, b) => a === b),

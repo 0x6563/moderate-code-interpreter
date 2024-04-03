@@ -1,5 +1,5 @@
 import { ControlType, ValueType } from "../types";
-export declare const Expressions: {
+export declare const Operators: {
     number: {
         like: (values: ValueType[]) => ValueType | ControlType;
         '==': (values: ValueType[]) => ValueType | ControlType;

@@ -19,7 +19,7 @@ export function DynamicValue(value) {
         }
         return Value('object', r);
     }
-    return Value(GetValueType(value), value);
+    return Value(valuetype, value);
 }
 export function Marshal(value) {
     return DynamicValue(value);

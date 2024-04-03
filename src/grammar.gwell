@@ -30,9 +30,11 @@ lexer: {{
     root ->
         - import: keywords
         - when: /\d+/ tag: "digits" highlight: "number"
-        - when: /"(?:\\["bfnrt\/\\]|\\u[a-fA-F0-9]{4}|[^"\\])*"/ highlight: "string" tag: "string"
-        - when: /[_a-zA-Z][_a-zA-Z\d]*/ tag: "word"
+        - when: /"/ tag: "dquote" highlight:"string" goto: dstring 
+        - when: /'/ tag: "squote" highlight:"string" goto: sstring 
+        - when: /[_a-zA-Z$][_a-zA-Z$\d]*/ tag: "word"
         - when: "=>" tag: "l_arrow" highlight: "keyword"
+        - when: "!=" tag: "l_arrow" highlight: "keyword"
         - when: "==" tag: "l_eqeq" highlight: "keyword"
         - when: ">=" tag: "l_gteq" highlight: "keyword"
         - when: "<=" tag: "l_lteq" highlight: "keyword"
@@ -58,16 +60,16 @@ lexer: {{
         - when: "!" tag: "l_exc" highlight: "keyword"
         - when: "." tag: "l_dot"
         - when: "," tag: "l_comma" highlight: "delimiter"
-        - when: "(" tag: "l_lparen" highlight: "delimiter"
-        - when: ")" tag: "l_rparen" highlight: "delimiter"
-        - when: "{" tag: "l_lcurly" highlight: "delimiter"
-        - when: "}" tag: "l_rcurly" highlight: "delimiter"
-        - when: "[" tag: "l_lbrack" highlight: "delimiter"
-        - when: "]" tag: "l_rbrack" highlight: "delimiter"
+        - when: "(" tag: "l_lparen" highlight: "delimiter" inset
+        - when: ")" tag: "l_rparen" highlight: "delimiter" pop
+        - when: "{" tag: "l_lcurly" highlight: "delimiter" inset
+        - when: "}" tag: "l_rcurly" highlight: "delimiter" pop
+        - when: "[" tag: "l_lbrack" highlight: "delimiter" inset
+        - when: "]" tag: "l_rbrack" highlight: "delimiter" pop
         - when: /\s+/ tag: "ws"
 
     keywords ->
-        - when: /\$/ tag: "keyword" highlight: "keyword"
+        - when: /\@/ tag: "keyword" highlight: "keyword"
         - when: /set(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
         - when: /var(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
         - when: /const(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
@@ -109,6 +111,16 @@ lexer: {{
 
         - when: /list(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
         - when: /first(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
+        
+    dstring ->
+        - when: /[^\"]+/ tag: "string" highlight:"string"
+        - when: /\\./ tag: "escaped" highlight:"string"
+        - when: "\"" tag: "dquote" highlight:"string" pop
+
+    sstring ->
+        - when: /[^\']+/ tag: "string" highlight:"string"
+        - when: /\\./ tag: "escaped" highlight:"string"
+        - when: "'" tag: "squote" highlight:"string" pop
 
 }}
 
@@ -274,7 +286,15 @@ grammar: {{
 
     NegativeNumber ->  "-" _ Number : {{ { type: TYPES.Literal, kind: 'number', value: '-' +$2.value } }}
 
-    String -> $string : {{ { type: TYPES.Literal, kind: 'string', value: JSON.parse($0.value) } }}
+    String -> DString : {{ { type: TYPES.Literal, kind: 'string', value: JSON.parse($0) } }}
+    
+    DString -> $dquote stringInner? $dquote : {{ '"' + $1 + '"' }}
+    DString -> $squote stringInner? $squote : {{ '"' + $1 + '"' }}
+
+    stringInner -> $escaped : {{  $0.value }}
+        | $string : {{  $0.value }}
+        | stringInner $escaped : {{ $0 + $1.value }}
+        | stringInner $string : {{ $0 + $1.value }}
 
     Array -> "[" _ "]" : {{ { type: TYPES.Array, items: [] } }}
         | "[" _ Exp_list _ "]" : {{ { type: TYPES.Array, items: $2 } }}
@@ -306,9 +326,7 @@ grammar: {{
 
     QSlice -> "segment" __ Range : {{ $2 }}
 
-    Range ->  Exp
-     _ "to" _ Exp
-     : {{ { low: $0, high: $4 } }}
+    Range ->  Exp _ "to" _ Exp : {{ { low: $0, high: $4 } }}
 
     Alias -> Reference : {{ $0 }}
         | Reference __ "as" __ Word : {{ { ...$0, alias: $4 } }}

@@ -7,7 +7,7 @@ import { If } from "./statements/if";
 import { Scan } from "./statements/scan";
 import { For } from "./statements/for";
 import { While } from "./statements/while";
-import { Expressions } from "./expressions/operators";
+import { Operators } from "./expressions/operators";
 import { Literals } from "./expressions/literals";
 import { Logical } from "./expressions/logical";
 import { ObjectLiteral } from "./expressions/object";
@@ -98,10 +98,10 @@ export function ResolveValue(context: Context, obj: Expression | ValueType): Con
                 return r;
             operands.push(r);
         }
-        if (!(Expressions?.[operands[0].kind]?.[obj.operator])) {
+        if (!(Operators?.[operands[0].kind]?.[obj.operator])) {
             return Control('error', `Unknown Operator Type ${obj.operator} for ${operands[0].kind}`);
         }
-        return Expressions[operands[0].kind][obj.operator](operands);
+        return Operators[operands[0].kind][obj.operator](operands);
     }
 
     if (obj.type == 'call') {

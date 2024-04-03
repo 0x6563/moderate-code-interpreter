@@ -6,6 +6,7 @@
         "allowJs": true,
         "preserveConstEnums": true,
         "outDir": "./dist",
+        "esModuleInterop": true,
         "sourceMap": true,
         "target": "ESNext",
         "experimentalDecorators": true,

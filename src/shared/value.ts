@@ -25,7 +25,7 @@ export function DynamicValue(value: any) {
         }
         return Value('object', r);
     }
-    return Value(GetValueType(value) as any, value);
+    return Value(valuetype as any, value);
 }
 
 export function Marshal(value: any) {
