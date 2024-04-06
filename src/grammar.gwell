@@ -113,14 +113,18 @@ lexer: {{
         - when: /first(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
         
     dstring ->
-        - when: /[^\"]+/ tag: "string" highlight:"string"
-        - when: /\\./ tag: "escaped" highlight:"string"
+        - when: /\\[\\\/bnrft"]/ tag: "escaped" highlight:"constant"
+        - when: /\\u[A-Fa-f\d]{4}/ tag: "escaped" highlight:"constant"
+        - when: /\\./ tag:"badEscape"
+        - when: /[^"\\]+/ tag: "string" highlight:"string"
         - when: "\"" tag: "dquote" highlight:"string" pop
 
     sstring ->
-        - when: /[^\']+/ tag: "string" highlight:"string"
-        - when: /\\./ tag: "escaped" highlight:"string"
-        - when: "'" tag: "squote" highlight:"string" pop
+        - when: /\\[\\\/bnrft']/ tag: "escaped"
+        - when: /\\u[A-Fa-f\d]{4}/ tag: "escaped" 
+        - when: /\\./ tag:"badEscape"
+        - when: /[^'\\]+/ tag: "string" highlight:"string"
+        - when: "'" tag: "dquote" highlight:"string" pop
 
 }}
 
@@ -286,15 +290,17 @@ grammar: {{
 
     NegativeNumber ->  "-" _ Number : {{ { type: TYPES.Literal, kind: 'number', value: '-' +$2.value } }}
 
-    String -> DString : {{ { type: TYPES.Literal, kind: 'string', value: JSON.parse($0) } }}
+    String -> DString : {{ { type: TYPES.Literal, kind: 'string', value: $0 } }}
     
-    DString -> $dquote stringInner? $dquote : {{ '"' + $1 + '"' }}
-    DString -> $squote stringInner? $squote : {{ '"' + $1 + '"' }}
+    DString -> $dquote stringInner $dquote : {{ $1 }}
+    DString -> $dquote  $dquote : {{ '' }}
 
-    stringInner -> $escaped : {{  $0.value }}
+    stringInner -> stringEscape : {{  $0 }}
         | $string : {{  $0.value }}
-        | stringInner $escaped : {{ $0 + $1.value }}
+        | stringInner stringEscape : {{ $0 + $1 }}
         | stringInner $string : {{ $0 + $1.value }}
+    
+    stringEscape -> $escaped : {{  JSON.parse('"' +$0.value + '"') }}
 
     Array -> "[" _ "]" : {{ { type: TYPES.Array, items: [] } }}
         | "[" _ Exp_list _ "]" : {{ { type: TYPES.Array, items: $2 } }}

@@ -191,25 +191,20 @@ function GWLanguage() {
                     { name: "NegativeNumber", symbols: [{ literal: "-" }, "_", "Number"], postprocess: ({ data }) => { return { type: TYPES.Literal, kind: 'number', value: '-' + data[2].value }; } }
                 ],
                 String: [
-                    { name: "String", symbols: ["DString"], postprocess: ({ data }) => { return { type: TYPES.Literal, kind: 'string', value: JSON.parse(data[0]) }; } }
-                ],
-                DString$RPT01x1: [
-                    { name: "DString$RPT01x1", symbols: ["stringInner"], postprocess: ({ data }) => data[0] },
-                    { name: "DString$RPT01x1", symbols: [], postprocess: () => null }
+                    { name: "String", symbols: ["DString"], postprocess: ({ data }) => { return { type: TYPES.Literal, kind: 'string', value: data[0] }; } }
                 ],
                 DString: [
-                    { name: "DString", symbols: [{ token: "dquote" }, "DString$RPT01x1", { token: "dquote" }], postprocess: ({ data }) => { return '"' + data[1] + '"'; } },
-                    { name: "DString", symbols: [{ token: "squote" }, "DString$RPT01x2", { token: "squote" }], postprocess: ({ data }) => { return '"' + data[1] + '"'; } }
-                ],
-                DString$RPT01x2: [
-                    { name: "DString$RPT01x2", symbols: ["stringInner"], postprocess: ({ data }) => data[0] },
-                    { name: "DString$RPT01x2", symbols: [], postprocess: () => null }
+                    { name: "DString", symbols: [{ token: "dquote" }, "stringInner", { token: "dquote" }], postprocess: ({ data }) => { return data[1]; } },
+                    { name: "DString", symbols: [{ token: "dquote" }, { token: "dquote" }], postprocess: ({ data }) => { return ''; } }
                 ],
                 stringInner: [
-                    { name: "stringInner", symbols: [{ token: "escaped" }], postprocess: ({ data }) => { return data[0].value; } },
+                    { name: "stringInner", symbols: ["stringEscape"], postprocess: ({ data }) => { return data[0]; } },
                     { name: "stringInner", symbols: [{ token: "string" }], postprocess: ({ data }) => { return data[0].value; } },
-                    { name: "stringInner", symbols: ["stringInner", { token: "escaped" }], postprocess: ({ data }) => { return data[0] + data[1].value; } },
+                    { name: "stringInner", symbols: ["stringInner", "stringEscape"], postprocess: ({ data }) => { return data[0] + data[1]; } },
                     { name: "stringInner", symbols: ["stringInner", { token: "string" }], postprocess: ({ data }) => { return data[0] + data[1].value; } }
+                ],
+                stringEscape: [
+                    { name: "stringEscape", symbols: [{ token: "escaped" }], postprocess: ({ data }) => { return JSON.parse('"' + data[0].value + '"'); } }
                 ],
                 Array: [
                     { name: "Array", symbols: [{ literal: "[" }, "_", { literal: "]" }], postprocess: ({ data }) => { return { type: TYPES.Array, items: [] }; } },
@@ -374,6 +369,7 @@ function GWLanguage() {
                         { when: /'/, tag: ["squote"], highlight: "string", goto: "sstring" },
                         { when: /[_a-zA-Z$][_a-zA-Z$\d]*/, tag: ["word"] },
                         { when: "=>", tag: ["l_arrow"], highlight: "keyword" },
+                        { when: "!=", tag: ["l_arrow"], highlight: "keyword" },
                         { when: "==", tag: ["l_eqeq"], highlight: "keyword" },
                         { when: ">=", tag: ["l_gteq"], highlight: "keyword" },
                         { when: "<=", tag: ["l_lteq"], highlight: "keyword" },
@@ -456,17 +452,21 @@ function GWLanguage() {
                 dstring: {
                     name: "dstring",
                     rules: [
-                        { when: /[^\"]+/, tag: ["string"], highlight: "string" },
-                        { when: /\\./, tag: ["escaped"], highlight: "string" },
+                        { when: /\\[\/bnrft"]/, tag: ["escaped"], highlight: "constant" },
+                        { when: /\\u[A-Fa-f\d]{4}/, tag: ["escaped"], highlight: "constant" },
+                        { when: /\\./, tag: ["badEscape"] },
+                        { when: /[^"\\]+/, tag: ["string"], highlight: "string" },
                         { when: "\"", tag: ["dquote"], pop: 1, highlight: "string" }
                     ]
                 },
                 sstring: {
                     name: "sstring",
                     rules: [
-                        { when: /[^\']+/, tag: ["string"], highlight: "string" },
-                        { when: /\\./, tag: ["escaped"], highlight: "string" },
-                        { when: "'", tag: ["squote"], pop: 1, highlight: "string" }
+                        { when: /\\[\/bnrft']/, tag: ["escaped"] },
+                        { when: /\\u[A-Fa-f\d]{4}/, tag: ["escaped"] },
+                        { when: /\\./, tag: ["badEscape"] },
+                        { when: /[^'\\]+/, tag: ["string"], highlight: "string" },
+                        { when: "'", tag: ["dquote"], pop: 1, highlight: "string" }
                     ]
                 }
             }

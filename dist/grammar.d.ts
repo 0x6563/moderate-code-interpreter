@@ -466,25 +466,11 @@ declare function GWLanguage(): {
                     value: any;
                 };
             }[];
-            DString$RPT01x1: {
-                name: string;
-                symbols: string[];
-                postprocess: ({ data }: {
-                    data: any;
-                }) => any;
-            }[];
             DString: {
                 name: string;
                 symbols: (string | {
                     token: string;
                 })[];
-                postprocess: ({ data }: {
-                    data: any;
-                }) => string;
-            }[];
-            DString$RPT01x2: {
-                name: string;
-                symbols: string[];
                 postprocess: ({ data }: {
                     data: any;
                 }) => any;
@@ -494,6 +480,15 @@ declare function GWLanguage(): {
                 symbols: (string | {
                     token: string;
                 })[];
+                postprocess: ({ data }: {
+                    data: any;
+                }) => any;
+            }[];
+            stringEscape: {
+                name: string;
+                symbols: {
+                    token: string;
+                }[];
                 postprocess: ({ data }: {
                     data: any;
                 }) => any;
@@ -977,6 +972,11 @@ declare function GWLanguage(): {
                     highlight: string;
                     pop?: undefined;
                 } | {
+                    when: RegExp;
+                    tag: string[];
+                    highlight?: undefined;
+                    pop?: undefined;
+                } | {
                     when: string;
                     tag: string[];
                     pop: number;
@@ -986,6 +986,11 @@ declare function GWLanguage(): {
             sstring: {
                 name: string;
                 rules: ({
+                    when: RegExp;
+                    tag: string[];
+                    highlight?: undefined;
+                    pop?: undefined;
+                } | {
                     when: RegExp;
                     tag: string[];
                     highlight: string;
