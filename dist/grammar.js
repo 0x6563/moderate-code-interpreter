@@ -191,11 +191,10 @@ function GWLanguage() {
                     { name: "NegativeNumber", symbols: [{ literal: "-" }, "_", "Number"], postprocess: ({ data }) => { return { type: TYPES.Literal, kind: 'number', value: '-' + data[2].value }; } }
                 ],
                 String: [
-                    { name: "String", symbols: ["DString"], postprocess: ({ data }) => { return { type: TYPES.Literal, kind: 'string', value: data[0] }; } }
-                ],
-                DString: [
-                    { name: "DString", symbols: [{ token: "dquote" }, "stringInner", { token: "dquote" }], postprocess: ({ data }) => { return data[1]; } },
-                    { name: "DString", symbols: [{ token: "dquote" }, { token: "dquote" }], postprocess: ({ data }) => { return ''; } }
+                    { name: "String", symbols: [{ token: "dquote" }, "stringInner", { token: "dquote" }], postprocess: ({ data }) => { return { type: TYPES.Literal, kind: 'string', value: data[1] }; } },
+                    { name: "String", symbols: [{ token: "dquote" }, { token: "dquote" }], postprocess: ({ data }) => { return { type: TYPES.Literal, kind: 'string', value: '' }; } },
+                    { name: "String", symbols: [{ token: "squote" }, "stringInner", { token: "squote" }], postprocess: ({ data }) => { return { type: TYPES.Literal, kind: 'string', value: data[1] }; } },
+                    { name: "String", symbols: [{ token: "squote" }, { token: "squote" }], postprocess: ({ data }) => { return { type: TYPES.Literal, kind: 'string', value: '' }; } }
                 ],
                 stringInner: [
                     { name: "stringInner", symbols: ["stringEscape"], postprocess: ({ data }) => { return data[0]; } },
@@ -204,7 +203,8 @@ function GWLanguage() {
                     { name: "stringInner", symbols: ["stringInner", { token: "string" }], postprocess: ({ data }) => { return data[0] + data[1].value; } }
                 ],
                 stringEscape: [
-                    { name: "stringEscape", symbols: [{ token: "escaped" }], postprocess: ({ data }) => { return JSON.parse('"' + data[0].value + '"'); } }
+                    { name: "stringEscape", symbols: [{ token: "escaped" }], postprocess: ({ data }) => { return JSON.parse('"' + data[0].value + '"'); } },
+                    { name: "stringEscape", symbols: [{ token: "quoteEscape" }], postprocess: ({ data }) => { return data[0].value[1]; } }
                 ],
                 Array: [
                     { name: "Array", symbols: [{ literal: "[" }, "_", { literal: "]" }], postprocess: ({ data }) => { return { type: TYPES.Array, items: [] }; } },
@@ -452,7 +452,8 @@ function GWLanguage() {
                 dstring: {
                     name: "dstring",
                     rules: [
-                        { when: /\\[\/bnrft"]/, tag: ["escaped"], highlight: "constant" },
+                        { when: /\\[\/bnrft]/, tag: ["escaped"], highlight: "constant" },
+                        { when: /\\"/, tag: ["quoteEscape"] },
                         { when: /\\u[A-Fa-f\d]{4}/, tag: ["escaped"], highlight: "constant" },
                         { when: /\\./, tag: ["badEscape"] },
                         { when: /[^"\\]+/, tag: ["string"], highlight: "string" },
@@ -462,11 +463,12 @@ function GWLanguage() {
                 sstring: {
                     name: "sstring",
                     rules: [
-                        { when: /\\[\/bnrft']/, tag: ["escaped"] },
+                        { when: /\\[\/bnrft]/, tag: ["escaped"] },
+                        { when: /\\'/, tag: ["quoteEscape"] },
                         { when: /\\u[A-Fa-f\d]{4}/, tag: ["escaped"] },
                         { when: /\\./, tag: ["badEscape"] },
                         { when: /[^'\\]+/, tag: ["string"], highlight: "string" },
-                        { when: "'", tag: ["dquote"], pop: 1, highlight: "string" }
+                        { when: "'", tag: ["squote"], pop: 1, highlight: "string" }
                     ]
                 }
             }

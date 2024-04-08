@@ -457,7 +457,9 @@ declare function GWLanguage(): {
             }[];
             String: {
                 name: string;
-                symbols: string[];
+                symbols: (string | {
+                    token: string;
+                })[];
                 postprocess: ({ data }: {
                     data: any;
                 }) => {
@@ -465,15 +467,6 @@ declare function GWLanguage(): {
                     kind: string;
                     value: any;
                 };
-            }[];
-            DString: {
-                name: string;
-                symbols: (string | {
-                    token: string;
-                })[];
-                postprocess: ({ data }: {
-                    data: any;
-                }) => any;
             }[];
             stringInner: {
                 name: string;

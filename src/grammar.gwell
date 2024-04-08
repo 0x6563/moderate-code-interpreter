@@ -113,18 +113,20 @@ lexer: {{
         - when: /first(?![a-zA-Z])/ tag: "keyword" highlight: "keyword"
         
     dstring ->
-        - when: /\\[\\\/bnrft"]/ tag: "escaped" highlight:"constant"
+        - when: /\\[\\\/bnrft]/ tag: "escaped" highlight:"constant"
+        - when: /\\"/ tag: "quoteEscape"
         - when: /\\u[A-Fa-f\d]{4}/ tag: "escaped" highlight:"constant"
         - when: /\\./ tag:"badEscape"
         - when: /[^"\\]+/ tag: "string" highlight:"string"
         - when: "\"" tag: "dquote" highlight:"string" pop
 
     sstring ->
-        - when: /\\[\\\/bnrft']/ tag: "escaped"
+        - when: /\\[\\\/bnrft]/ tag: "escaped"
+        - when: /\\'/ tag: "quoteEscape"
         - when: /\\u[A-Fa-f\d]{4}/ tag: "escaped" 
         - when: /\\./ tag:"badEscape"
         - when: /[^'\\]+/ tag: "string" highlight:"string"
-        - when: "'" tag: "dquote" highlight:"string" pop
+        - when: "'" tag: "squote" highlight:"string" pop
 
 }}
 
@@ -289,11 +291,11 @@ grammar: {{
         | $digits : {{ { type: TYPES.Literal, kind: 'number', value: $0.value } }}
 
     NegativeNumber ->  "-" _ Number : {{ { type: TYPES.Literal, kind: 'number', value: '-' +$2.value } }}
-
-    String -> DString : {{ { type: TYPES.Literal, kind: 'string', value: $0 } }}
     
-    DString -> $dquote stringInner $dquote : {{ $1 }}
-    DString -> $dquote  $dquote : {{ '' }}
+    String -> $dquote stringInner $dquote : {{ { type: TYPES.Literal, kind: 'string', value: $1 } }}
+    String -> $dquote  $dquote : {{ { type: TYPES.Literal, kind: 'string', value: '' } }}
+    String -> $squote stringInner $squote : {{ { type: TYPES.Literal, kind: 'string', value: $1 } }}
+    String -> $squote  $squote : {{ { type: TYPES.Literal, kind: 'string', value: '' } }}
 
     stringInner -> stringEscape : {{  $0 }}
         | $string : {{  $0.value }}
@@ -301,6 +303,7 @@ grammar: {{
         | stringInner $string : {{ $0 + $1.value }}
     
     stringEscape -> $escaped : {{  JSON.parse('"' +$0.value + '"') }}
+        | $quoteEscape : {{ $0.value[1] }}
 
     Array -> "[" _ "]" : {{ { type: TYPES.Array, items: [] } }}
         | "[" _ Exp_list _ "]" : {{ { type: TYPES.Array, items: $2 } }}
