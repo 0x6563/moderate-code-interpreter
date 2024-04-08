@@ -1,3 +1,4 @@
+export { TYPES } from "./grammar";
 import { Context } from "./shared/context";
 
 export type ValueTypeUndefined = { type: 'value', kind: "undefined", value: undefined };
@@ -107,28 +108,3 @@ export type StatementEach = { type: 'loop', kind: 'scan', k?: string, v: string;
 export type ConditionalStatement = { condition: Expression, statements: Statement[] };
 export type FunctionArgument = { name: string, default: Expression };
 export type Statement = StatementDeclareConstant | StatementDeclareVariable | StatementDeclareFunction | StatementAssignment | StatementConditional | StatementWhile | StatementEach | StatementFor | ControlType;
-
-export const TYPES = {
-    Expression: 'expression',
-    Default: 'default',
-    Logical: 'logical',
-    Assignment: 'assignment',
-    Declare: 'declare',
-    Control: 'control',
-    Conditional: 'conditional',
-    Loop: 'loop',
-    Literal: 'literal',
-    Array: 'array',
-    Object: 'object',
-    Lambda: 'lambda',
-    Reference: 'reference',
-    Query: 'query',
-    Call: 'call',
-    Match: 'match',
-    Spread: 'spread',
-    Cluster: 'cluster',
-    Constant: 'constant',
-    Wildcard: 'wildcard',
-    Yield: 'yield',
-    Word: 'word'
-}

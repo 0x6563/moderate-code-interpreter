@@ -1,9 +1,34 @@
+export namespace TYPES {
+    let Operation: string;
+    let Default: string;
+    let Logical: string;
+    let Assignment: string;
+    let Declare: string;
+    let Control: string;
+    let Conditional: string;
+    let Loop: string;
+    let Literal: string;
+    let Array: string;
+    let Object: string;
+    let Lambda: string;
+    let Reference: string;
+    let Query: string;
+    let Run: string;
+    let Call: string;
+    let Match: string;
+    let Spread: string;
+    let Cluster: string;
+    let Constant: string;
+    let Wildcard: string;
+    let Yield: string;
+    let Word: string;
+}
 export default GWLanguage;
 declare function GWLanguage(): {
     grammar: {
         start: string;
         rules: {
-            Chunk: ({
+            MC_Body: ({
                 name: string;
                 symbols: string[];
                 postprocess: ({ data }: {
@@ -20,14 +45,14 @@ declare function GWLanguage(): {
                     expression: any;
                 };
             })[];
-            Statements: {
+            MC_Statements: {
                 name: string;
                 symbols: string[];
                 postprocess: ({ data }: {
                     data: any;
                 }) => any;
             }[];
-            Statement: ({
+            MC_Statement: ({
                 name: string;
                 symbols: string[];
                 postprocess: ({ data }: {
@@ -56,7 +81,7 @@ declare function GWLanguage(): {
                     expression: any;
                 };
             })[];
-            Assignment: {
+            MC_Assignment: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -69,7 +94,7 @@ declare function GWLanguage(): {
                     value: any;
                 };
             }[];
-            DeclareVar: {
+            MC_DeclareVar: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -83,7 +108,7 @@ declare function GWLanguage(): {
                     value: any;
                 };
             }[];
-            Return: {
+            MC_Return: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -96,7 +121,7 @@ declare function GWLanguage(): {
                     value: any;
                 };
             }[];
-            DeclareFunction: {
+            MC_DeclareFunction: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -111,7 +136,7 @@ declare function GWLanguage(): {
                     statements: any;
                 };
             }[];
-            IfBlock: {
+            MC_IfBlock: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -120,7 +145,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             }[];
-            ScanBlock: {
+            MC_ScanBlock: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -129,7 +154,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             }[];
-            KVInIterator: {
+            MC_KVInIterator: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -141,7 +166,7 @@ declare function GWLanguage(): {
                     iterable: any;
                 };
             }[];
-            ConditionLoop: {
+            MC_ConditionLoop: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -155,7 +180,7 @@ declare function GWLanguage(): {
                     statements: any;
                 };
             }[];
-            LoopBlock: {
+            MC_LoopBlock: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -171,7 +196,7 @@ declare function GWLanguage(): {
                     statements: any;
                 };
             }[];
-            Block: {
+            MC_Block: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -180,7 +205,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             }[];
-            Exp_list: {
+            MC_Exp_list: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -189,7 +214,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             }[];
-            Exp_ss: {
+            MC_Exp_ss: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -198,14 +223,14 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             }[];
-            Exp: {
+            MC_Exp: {
                 name: string;
                 symbols: string[];
                 postprocess: ({ data }: {
                     data: any;
                 }) => any;
             }[];
-            ExpOr: ({
+            MC_ExpOr: ({
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -224,7 +249,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             })[];
-            ExpAnd: ({
+            MC_ExpAnd: ({
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -243,7 +268,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             })[];
-            ExpCompare: ({
+            MC_ExpCompare: ({
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -262,7 +287,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             })[];
-            ExpConcat: ({
+            MC_ExpConcat: ({
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -281,7 +306,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             })[];
-            ExpSum: ({
+            MC_ExpSum: ({
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -300,7 +325,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             })[];
-            ExpProduct: ({
+            MC_ExpProduct: ({
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -319,7 +344,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             })[];
-            ExpUnary: ({
+            MC_ExpUnary: ({
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -338,7 +363,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             })[];
-            ExpPower: ({
+            MC_ExpPower: ({
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -357,14 +382,14 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             })[];
-            Atom: {
+            MC_Atom: {
                 name: string;
                 symbols: string[];
                 postprocess: ({ data }: {
                     data: any;
                 }) => any;
             }[];
-            Constant: {
+            MC_Constant: {
                 name: string;
                 symbols: {
                     literal: string;
@@ -376,7 +401,7 @@ declare function GWLanguage(): {
                     value: any;
                 };
             }[];
-            Reference: {
+            MC_Reference: {
                 name: string;
                 symbols: string[];
                 postprocess: ({ data }: {
@@ -386,7 +411,7 @@ declare function GWLanguage(): {
                     path: any;
                 };
             }[];
-            Path: {
+            MC_Path: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -395,7 +420,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             }[];
-            Word: {
+            MC_Word: {
                 name: string;
                 symbols: {
                     token: string;
@@ -404,7 +429,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             }[];
-            Group: {
+            MC_Group: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -413,7 +438,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             }[];
-            Number: ({
+            MC_Number: ({
                 name: string;
                 symbols: ({
                     token: string;
@@ -442,7 +467,7 @@ declare function GWLanguage(): {
                     value: any;
                 };
             })[];
-            NegativeNumber: {
+            MC_NegativeNumber: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -455,7 +480,7 @@ declare function GWLanguage(): {
                     value: string;
                 };
             }[];
-            String: {
+            MC_String: {
                 name: string;
                 symbols: (string | {
                     token: string;
@@ -468,7 +493,7 @@ declare function GWLanguage(): {
                     value: any;
                 };
             }[];
-            stringInner: {
+            MC_StringInner: {
                 name: string;
                 symbols: (string | {
                     token: string;
@@ -477,7 +502,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             }[];
-            stringEscape: {
+            MC_StringEscape: {
                 name: string;
                 symbols: {
                     token: string;
@@ -486,7 +511,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             }[];
-            Array: {
+            MC_Array: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -498,7 +523,7 @@ declare function GWLanguage(): {
                     items: any;
                 };
             }[];
-            Object: {
+            MC_Object: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -510,7 +535,7 @@ declare function GWLanguage(): {
                     properties: any;
                 };
             }[];
-            Prop_list: {
+            MC_Prop_list: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -519,7 +544,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             }[];
-            Prop: ({
+            MC_Prop: ({
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -542,51 +567,51 @@ declare function GWLanguage(): {
                     value: any;
                 };
             })[];
-            Query$RPT01x1$SUBx1: {
+            MC_Query$RPT01x1$SUBx1: {
                 name: string;
                 symbols: string[];
             }[];
-            Query$RPT01x1: {
-                name: string;
-                symbols: string[];
-                postprocess: ({ data }: {
-                    data: any;
-                }) => any;
-            }[];
-            Query$RPT01x2$SUBx1: {
-                name: string;
-                symbols: string[];
-            }[];
-            Query$RPT01x2: {
+            MC_Query$RPT01x1: {
                 name: string;
                 symbols: string[];
                 postprocess: ({ data }: {
                     data: any;
                 }) => any;
             }[];
-            Query$RPT01x3$SUBx1: {
+            MC_Query$RPT01x2$SUBx1: {
                 name: string;
                 symbols: string[];
             }[];
-            Query$RPT01x3: {
-                name: string;
-                symbols: string[];
-                postprocess: ({ data }: {
-                    data: any;
-                }) => any;
-            }[];
-            Query$RPT01x4$SUBx1: {
-                name: string;
-                symbols: string[];
-            }[];
-            Query$RPT01x4: {
+            MC_Query$RPT01x2: {
                 name: string;
                 symbols: string[];
                 postprocess: ({ data }: {
                     data: any;
                 }) => any;
             }[];
-            Query: {
+            MC_Query$RPT01x3$SUBx1: {
+                name: string;
+                symbols: string[];
+            }[];
+            MC_Query$RPT01x3: {
+                name: string;
+                symbols: string[];
+                postprocess: ({ data }: {
+                    data: any;
+                }) => any;
+            }[];
+            MC_Query$RPT01x4$SUBx1: {
+                name: string;
+                symbols: string[];
+            }[];
+            MC_Query$RPT01x4: {
+                name: string;
+                symbols: string[];
+                postprocess: ({ data }: {
+                    data: any;
+                }) => any;
+            }[];
+            MC_Query: {
                 name: string;
                 symbols: string[];
                 postprocess: ({ data }: {
@@ -601,7 +626,7 @@ declare function GWLanguage(): {
                     slice: any;
                 };
             }[];
-            QQuery: {
+            MC_QQuery: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -613,20 +638,20 @@ declare function GWLanguage(): {
                     iterable: any;
                 };
             }[];
-            QSort$RPT01x1$SUBx1: {
+            MC_QSort$RPT01x1$SUBx1: {
                 name: string;
                 symbols: (string | {
                     literal: string;
                 })[];
             }[];
-            QSort$RPT01x1: {
+            MC_QSort$RPT01x1: {
                 name: string;
                 symbols: string[];
                 postprocess: ({ data }: {
                     data: any;
                 }) => any;
             }[];
-            QSort: {
+            MC_QSort: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -638,7 +663,7 @@ declare function GWLanguage(): {
                     direction: any;
                 };
             }[];
-            QFilter: {
+            MC_QFilter: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -647,7 +672,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             }[];
-            QYield: {
+            MC_QYield: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -660,7 +685,7 @@ declare function GWLanguage(): {
                     value: any;
                 };
             }[];
-            QCluster: {
+            MC_QCluster: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -669,7 +694,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             }[];
-            QSlice: {
+            MC_QSlice: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -678,7 +703,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             }[];
-            Range: {
+            MC_Range: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -690,7 +715,7 @@ declare function GWLanguage(): {
                     high: any;
                 };
             }[];
-            Alias: {
+            MC_Alias: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -699,7 +724,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             }[];
-            Alias_list: {
+            MC_Alias_list: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -708,7 +733,7 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             }[];
-            Lambda: {
+            MC_Lambda: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -721,7 +746,7 @@ declare function GWLanguage(): {
                     expression: any;
                 };
             }[];
-            FunctionArg: ({
+            MC_FunctionArg: ({
                 name: string;
                 symbols: string[];
                 postprocess: ({ data }: {
@@ -741,7 +766,7 @@ declare function GWLanguage(): {
                     default: any;
                 };
             })[];
-            FunctionArg_list: {
+            MC_FunctionArg_list: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -750,14 +775,14 @@ declare function GWLanguage(): {
                     data: any;
                 }) => any;
             }[];
-            PropName: {
+            MC_PropName: {
                 name: string;
                 symbols: string[];
                 postprocess: ({ data }: {
                     data: any;
                 }) => any;
             }[];
-            FunctionCall: {
+            MC_FunctionCall: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -770,20 +795,20 @@ declare function GWLanguage(): {
                     args: any;
                 };
             }[];
-            VariadicLogic$RPT01x1$SUBx1: {
+            MC_VariadicLogic$RPT01x1$SUBx1: {
                 name: string;
                 symbols: (string | {
                     literal: string;
                 })[];
             }[];
-            VariadicLogic$RPT01x1: {
+            MC_VariadicLogic$RPT01x1: {
                 name: string;
                 symbols: string[];
                 postprocess: ({ data }: {
                     data: any;
                 }) => any;
             }[];
-            VariadicLogic: {
+            MC_VariadicLogic: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -796,20 +821,20 @@ declare function GWLanguage(): {
                     operands: any;
                 };
             }[];
-            VariadicLogic$RPT01x2$SUBx1: {
+            MC_VariadicLogic$RPT01x2$SUBx1: {
                 name: string;
                 symbols: (string | {
                     literal: string;
                 })[];
             }[];
-            VariadicLogic$RPT01x2: {
+            MC_VariadicLogic$RPT01x2: {
                 name: string;
                 symbols: string[];
                 postprocess: ({ data }: {
                     data: any;
                 }) => any;
             }[];
-            Match: {
+            MC_Match: {
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -821,7 +846,7 @@ declare function GWLanguage(): {
                     statements: any;
                 };
             }[];
-            MatchStatement: ({
+            MC_MatchStatement: ({
                 name: string;
                 symbols: (string | {
                     literal: string;
@@ -844,7 +869,7 @@ declare function GWLanguage(): {
                     value: any;
                 };
             })[];
-            MatchStatement_list: {
+            MC_MatchStatement_list: {
                 name: string;
                 symbols: string[];
                 postprocess: ({ data }: {
@@ -881,7 +906,7 @@ declare function GWLanguage(): {
     lexer: {
         start: string;
         states: {
-            root: {
+            mc_root: {
                 name: string;
                 rules: ({
                     import: string[];
@@ -895,16 +920,16 @@ declare function GWLanguage(): {
                     when: RegExp;
                     tag: string[];
                     highlight: string;
+                    goto: string;
                     import?: undefined;
-                    goto?: undefined;
                     inset?: undefined;
                     pop?: undefined;
                 } | {
                     when: RegExp;
                     tag: string[];
                     highlight: string;
-                    goto: string;
                     import?: undefined;
+                    goto?: undefined;
                     inset?: undefined;
                     pop?: undefined;
                 } | {
@@ -949,7 +974,7 @@ declare function GWLanguage(): {
                     inset?: undefined;
                 })[];
             };
-            keywords: {
+            mc_keywords: {
                 name: string;
                 rules: {
                     when: RegExp;
@@ -957,7 +982,7 @@ declare function GWLanguage(): {
                     highlight: string;
                 }[];
             };
-            dstring: {
+            mc_dqstring: {
                 name: string;
                 rules: ({
                     when: RegExp;
@@ -976,7 +1001,7 @@ declare function GWLanguage(): {
                     highlight: string;
                 })[];
             };
-            sstring: {
+            mc_sqstring: {
                 name: string;
                 rules: ({
                     when: RegExp;

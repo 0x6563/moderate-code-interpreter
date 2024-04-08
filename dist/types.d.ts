@@ -1,3 +1,4 @@
+export { TYPES } from "./grammar";
 import { Context } from "./shared/context";
 export type ValueTypeUndefined = {
     type: 'value';
@@ -228,27 +229,3 @@ export type FunctionArgument = {
     default: Expression;
 };
 export type Statement = StatementDeclareConstant | StatementDeclareVariable | StatementDeclareFunction | StatementAssignment | StatementConditional | StatementWhile | StatementEach | StatementFor | ControlType;
-export declare const TYPES: {
-    Expression: string;
-    Default: string;
-    Logical: string;
-    Assignment: string;
-    Declare: string;
-    Control: string;
-    Conditional: string;
-    Loop: string;
-    Literal: string;
-    Array: string;
-    Object: string;
-    Lambda: string;
-    Reference: string;
-    Query: string;
-    Call: string;
-    Match: string;
-    Spread: string;
-    Cluster: string;
-    Constant: string;
-    Wildcard: string;
-    Yield: string;
-    Word: string;
-};

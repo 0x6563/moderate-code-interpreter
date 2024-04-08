@@ -5,8 +5,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc --build",
-    "compile": "tsx compile.ts",
+    "build": "tsx compile.ts && tsc --build",
     "test": "node --test --import tsx --test-reporter ./tests/reporter.mjs  tests/*.test.ts",
     "readme": "tsx readme.ts",
     "do": "npm run test && npm run build"
