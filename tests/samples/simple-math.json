@@ -1,0 +1,61 @@
+{
+    "description": "simple-math.txt",
+    "input": "var a = 3;\r\nvar b = 4; \r\nreturn a + b;",
+    "tree": {
+        "statements": [
+            {
+                "type": "declare",
+                "kind": "var",
+                "name": "a",
+                "value": {
+                    "type": "literal",
+                    "kind": "number",
+                    "value": "3"
+                }
+            },
+            {
+                "type": "declare",
+                "kind": "var",
+                "name": "b",
+                "value": {
+                    "type": "literal",
+                    "kind": "number",
+                    "value": "4"
+                }
+            },
+            {
+                "type": "control",
+                "kind": "return",
+                "value": {
+                    "type": "operation",
+                    "operator": "+",
+                    "operands": [
+                        {
+                            "type": "reference",
+                            "path": [
+                                {
+                                    "type": "word",
+                                    "value": "a"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "reference",
+                            "path": [
+                                {
+                                    "type": "word",
+                                    "value": "b"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "result": {
+        "type": "value",
+        "kind": "number",
+        "value": 7
+    }
+}

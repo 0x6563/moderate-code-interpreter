@@ -1,0 +1,294 @@
+{
+    "description": "filter-array-objects.txt",
+    "input": "var items = [\r\n   {k: {i: 1}},\r\n   {k: {i: 2}},\r\n   {k: {i: 3}},\r\n   {k: {i: 4}},\r\n   {k: {i: 5}},\r\n   {k: {i: 6}},\r\n   {k: {i: 7}}\r\n];\r\n\r\nreturn query o in items\r\nfilter all { \r\n    o.k.i > 2;\r\n    o.k.i < 5;\r\n}\r\nlist o;",
+    "tree": {
+        "statements": [
+            {
+                "type": "declare",
+                "kind": "var",
+                "name": "items",
+                "value": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "object",
+                            "properties": [
+                                {
+                                    "key": "k",
+                                    "value": {
+                                        "type": "object",
+                                        "properties": [
+                                            {
+                                                "key": "i",
+                                                "value": {
+                                                    "type": "literal",
+                                                    "kind": "number",
+                                                    "value": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": [
+                                {
+                                    "key": "k",
+                                    "value": {
+                                        "type": "object",
+                                        "properties": [
+                                            {
+                                                "key": "i",
+                                                "value": {
+                                                    "type": "literal",
+                                                    "kind": "number",
+                                                    "value": "2"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": [
+                                {
+                                    "key": "k",
+                                    "value": {
+                                        "type": "object",
+                                        "properties": [
+                                            {
+                                                "key": "i",
+                                                "value": {
+                                                    "type": "literal",
+                                                    "kind": "number",
+                                                    "value": "3"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": [
+                                {
+                                    "key": "k",
+                                    "value": {
+                                        "type": "object",
+                                        "properties": [
+                                            {
+                                                "key": "i",
+                                                "value": {
+                                                    "type": "literal",
+                                                    "kind": "number",
+                                                    "value": "4"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": [
+                                {
+                                    "key": "k",
+                                    "value": {
+                                        "type": "object",
+                                        "properties": [
+                                            {
+                                                "key": "i",
+                                                "value": {
+                                                    "type": "literal",
+                                                    "kind": "number",
+                                                    "value": "5"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": [
+                                {
+                                    "key": "k",
+                                    "value": {
+                                        "type": "object",
+                                        "properties": [
+                                            {
+                                                "key": "i",
+                                                "value": {
+                                                    "type": "literal",
+                                                    "kind": "number",
+                                                    "value": "6"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": [
+                                {
+                                    "key": "k",
+                                    "value": {
+                                        "type": "object",
+                                        "properties": [
+                                            {
+                                                "key": "i",
+                                                "value": {
+                                                    "type": "literal",
+                                                    "kind": "number",
+                                                    "value": "7"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "type": "control",
+                "kind": "return",
+                "value": {
+                    "type": "query",
+                    "source": {
+                        "kind": "query",
+                        "iterable": {
+                            "v": "o",
+                            "iterable": {
+                                "type": "reference",
+                                "path": [
+                                    {
+                                        "type": "word",
+                                        "value": "items"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "filter": {
+                        "type": "logical",
+                        "operator": "all",
+                        "operands": [
+                            {
+                                "type": "operation",
+                                "operator": ">",
+                                "operands": [
+                                    {
+                                        "type": "reference",
+                                        "path": [
+                                            {
+                                                "type": "word",
+                                                "value": "o"
+                                            },
+                                            {
+                                                "type": "word",
+                                                "value": "k"
+                                            },
+                                            {
+                                                "type": "word",
+                                                "value": "i"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "literal",
+                                        "kind": "number",
+                                        "value": "2"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "operation",
+                                "operator": "<",
+                                "operands": [
+                                    {
+                                        "type": "reference",
+                                        "path": [
+                                            {
+                                                "type": "word",
+                                                "value": "o"
+                                            },
+                                            {
+                                                "type": "word",
+                                                "value": "k"
+                                            },
+                                            {
+                                                "type": "word",
+                                                "value": "i"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "literal",
+                                        "kind": "number",
+                                        "value": "5"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "yield": {
+                        "type": "yield",
+                        "kind": "list",
+                        "value": {
+                            "type": "reference",
+                            "path": [
+                                {
+                                    "type": "word",
+                                    "value": "o"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    "result": {
+        "type": "value",
+        "kind": "array",
+        "value": [
+            {
+                "k": {
+                    "type": "value",
+                    "kind": "object",
+                    "value": {
+                        "i": {
+                            "type": "value",
+                            "kind": "number",
+                            "value": 3
+                        }
+                    }
+                }
+            },
+            {
+                "k": {
+                    "type": "value",
+                    "kind": "object",
+                    "value": {
+                        "i": {
+                            "type": "value",
+                            "kind": "number",
+                            "value": 4
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

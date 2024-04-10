@@ -1,5 +1,0 @@
-return Merge(["abc"],["def"]);
-
-function Merge(a, b){
-    return [123] .. a .. b;
-}

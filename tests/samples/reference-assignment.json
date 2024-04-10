@@ -1,0 +1,97 @@
+{
+    "description": "reference-assignment.txt",
+    "input": "var a ={\r\n    b: 2,\r\n    c: {\r\n        d: 3\r\n    }\r\n};\r\n\r\na.c.d = 7;",
+    "tree": {
+        "statements": [
+            {
+                "type": "declare",
+                "kind": "var",
+                "name": "a",
+                "value": {
+                    "type": "object",
+                    "properties": [
+                        {
+                            "key": "b",
+                            "value": {
+                                "type": "literal",
+                                "kind": "number",
+                                "value": "2"
+                            }
+                        },
+                        {
+                            "key": "c",
+                            "value": {
+                                "type": "object",
+                                "properties": [
+                                    {
+                                        "key": "d",
+                                        "value": {
+                                            "type": "literal",
+                                            "kind": "number",
+                                            "value": "3"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "type": "assignment",
+                "reference": {
+                    "type": "reference",
+                    "path": [
+                        {
+                            "type": "word",
+                            "value": "a"
+                        },
+                        {
+                            "type": "word",
+                            "value": "c"
+                        },
+                        {
+                            "type": "word",
+                            "value": "d"
+                        }
+                    ]
+                },
+                "value": {
+                    "type": "literal",
+                    "kind": "number",
+                    "value": "7"
+                }
+            }
+        ]
+    },
+    "result": {
+        "type": "scope",
+        "scope": {
+            "a": {
+                "kind": "var",
+                "value": {
+                    "type": "value",
+                    "kind": "object",
+                    "value": {
+                        "b": {
+                            "type": "value",
+                            "kind": "number",
+                            "value": 2
+                        },
+                        "c": {
+                            "type": "value",
+                            "kind": "object",
+                            "value": {
+                                "d": {
+                                    "type": "value",
+                                    "kind": "number",
+                                    "value": 7
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

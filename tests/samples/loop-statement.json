@@ -1,0 +1,89 @@
+{
+    "description": "loop-statement.txt",
+    "input": "var i = 100000;\r\nwhile( i > 0 ){\r\n    i -= 1;\r\n}",
+    "tree": {
+        "statements": [
+            {
+                "type": "declare",
+                "kind": "var",
+                "name": "i",
+                "value": {
+                    "type": "literal",
+                    "kind": "number",
+                    "value": "100000"
+                }
+            },
+            {
+                "type": "loop",
+                "kind": "while",
+                "condition": {
+                    "type": "operation",
+                    "operator": ">",
+                    "operands": [
+                        {
+                            "type": "reference",
+                            "path": [
+                                {
+                                    "type": "word",
+                                    "value": "i"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "literal",
+                            "kind": "number",
+                            "value": "0"
+                        }
+                    ]
+                },
+                "statements": [
+                    {
+                        "type": "assignment",
+                        "reference": {
+                            "type": "reference",
+                            "path": [
+                                {
+                                    "type": "word",
+                                    "value": "i"
+                                }
+                            ]
+                        },
+                        "value": {
+                            "type": "operation",
+                            "operator": "-",
+                            "operands": [
+                                {
+                                    "type": "reference",
+                                    "path": [
+                                        {
+                                            "type": "word",
+                                            "value": "i"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "literal",
+                                    "kind": "number",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "result": {
+        "type": "scope",
+        "scope": {
+            "i": {
+                "kind": "var",
+                "value": {
+                    "type": "value",
+                    "kind": "number",
+                    "value": 0
+                }
+            }
+        }
+    }
+}

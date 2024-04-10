@@ -1,0 +1,108 @@
+{
+    "description": "array-push.txt",
+    "input": "var a = [];\r\na += 1 + 2;\r\na += 3;",
+    "tree": {
+        "statements": [
+            {
+                "type": "declare",
+                "kind": "var",
+                "name": "a",
+                "value": {
+                    "type": "array",
+                    "items": []
+                }
+            },
+            {
+                "type": "assignment",
+                "reference": {
+                    "type": "reference",
+                    "path": [
+                        {
+                            "type": "word",
+                            "value": "a"
+                        }
+                    ]
+                },
+                "value": {
+                    "type": "operation",
+                    "operator": "+",
+                    "operands": [
+                        {
+                            "type": "reference",
+                            "path": [
+                                {
+                                    "type": "word",
+                                    "value": "a"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "operation",
+                            "operator": "+",
+                            "operands": [
+                                {
+                                    "type": "literal",
+                                    "kind": "number",
+                                    "value": "1"
+                                },
+                                {
+                                    "type": "literal",
+                                    "kind": "number",
+                                    "value": "2"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "type": "assignment",
+                "reference": {
+                    "type": "reference",
+                    "path": [
+                        {
+                            "type": "word",
+                            "value": "a"
+                        }
+                    ]
+                },
+                "value": {
+                    "type": "operation",
+                    "operator": "+",
+                    "operands": [
+                        {
+                            "type": "reference",
+                            "path": [
+                                {
+                                    "type": "word",
+                                    "value": "a"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "literal",
+                            "kind": "number",
+                            "value": "3"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "result": {
+        "type": "scope",
+        "scope": {
+            "a": {
+                "kind": "var",
+                "value": {
+                    "type": "value",
+                    "kind": "array",
+                    "value": [
+                        3,
+                        3
+                    ]
+                }
+            }
+        }
+    }
+}

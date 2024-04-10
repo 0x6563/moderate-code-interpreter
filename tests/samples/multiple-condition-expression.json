@@ -1,0 +1,87 @@
+{
+    "description": "multiple-condition-expression.txt",
+    "input": "all {\r\n 1 < 2;\r\n 3 /2 < 3;\r\n 4 + 2 > 5;\r\n}",
+    "tree": {
+        "expression": {
+            "type": "logical",
+            "operator": "all",
+            "operands": [
+                {
+                    "type": "operation",
+                    "operator": "<",
+                    "operands": [
+                        {
+                            "type": "literal",
+                            "kind": "number",
+                            "value": "1"
+                        },
+                        {
+                            "type": "literal",
+                            "kind": "number",
+                            "value": "2"
+                        }
+                    ]
+                },
+                {
+                    "type": "operation",
+                    "operator": "<",
+                    "operands": [
+                        {
+                            "type": "operation",
+                            "operator": "/",
+                            "operands": [
+                                {
+                                    "type": "literal",
+                                    "kind": "number",
+                                    "value": "3"
+                                },
+                                {
+                                    "type": "literal",
+                                    "kind": "number",
+                                    "value": "2"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "literal",
+                            "kind": "number",
+                            "value": "3"
+                        }
+                    ]
+                },
+                {
+                    "type": "operation",
+                    "operator": ">",
+                    "operands": [
+                        {
+                            "type": "operation",
+                            "operator": "+",
+                            "operands": [
+                                {
+                                    "type": "literal",
+                                    "kind": "number",
+                                    "value": "4"
+                                },
+                                {
+                                    "type": "literal",
+                                    "kind": "number",
+                                    "value": "2"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "literal",
+                            "kind": "number",
+                            "value": "5"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "result": {
+        "type": "value",
+        "kind": "boolean",
+        "value": true
+    }
+}

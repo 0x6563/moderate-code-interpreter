@@ -1,0 +1,31 @@
+{
+    "description": "Simple Text Evaluation",
+    "input": "$ == 'Text'",
+    "tree": {
+        "expression": {
+            "type": "operation",
+            "operator": "==",
+            "operands": [
+                {
+                    "type": "reference",
+                    "path": [
+                        {
+                            "type": "word",
+                            "value": "$"
+                        }
+                    ]
+                },
+                {
+                    "type": "literal",
+                    "kind": "string",
+                    "value": "Text"
+                }
+            ]
+        }
+    },
+    "result": {
+        "kind": "error",
+        "type": "control",
+        "value": "Variable not declared: $"
+    }
+}

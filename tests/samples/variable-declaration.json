@@ -1,0 +1,31 @@
+{
+    "description": "variable-declaration.txt",
+    "input": "var a = 2;",
+    "tree": {
+        "statements": [
+            {
+                "type": "declare",
+                "kind": "var",
+                "name": "a",
+                "value": {
+                    "type": "literal",
+                    "kind": "number",
+                    "value": "2"
+                }
+            }
+        ]
+    },
+    "result": {
+        "type": "scope",
+        "scope": {
+            "a": {
+                "kind": "var",
+                "value": {
+                    "type": "value",
+                    "kind": "number",
+                    "value": 2
+                }
+            }
+        }
+    }
+}

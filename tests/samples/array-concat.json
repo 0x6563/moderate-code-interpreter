@@ -1,0 +1,118 @@
+{
+    "description": "array-concat.txt",
+    "input": "return Merge([\"abc\"],[\"def\"]);\r\n\r\nfunction Merge(a, b){\r\n    return [123] .. a .. b;\r\n}",
+    "tree": {
+        "statements": [
+            {
+                "type": "declare",
+                "kind": "function",
+                "name": "Merge",
+                "args": [
+                    {
+                        "name": "a"
+                    },
+                    {
+                        "name": "b"
+                    }
+                ],
+                "statements": [
+                    {
+                        "type": "control",
+                        "kind": "return",
+                        "value": {
+                            "type": "operation",
+                            "operator": "..",
+                            "operands": [
+                                {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "literal",
+                                            "kind": "number",
+                                            "value": "123"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "operation",
+                                    "operator": "..",
+                                    "operands": [
+                                        {
+                                            "type": "reference",
+                                            "path": [
+                                                {
+                                                    "type": "word",
+                                                    "value": "a"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "reference",
+                                            "path": [
+                                                {
+                                                    "type": "word",
+                                                    "value": "b"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "control",
+                "kind": "return",
+                "value": {
+                    "type": "call",
+                    "name": "Merge",
+                    "args": [
+                        {
+                            "type": "array",
+                            "items": [
+                                {
+                                    "type": "literal",
+                                    "kind": "string",
+                                    "value": "abc"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "array",
+                            "items": [
+                                {
+                                    "type": "literal",
+                                    "kind": "string",
+                                    "value": "def"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "result": {
+        "type": "value",
+        "kind": "array",
+        "value": [
+            {
+                "type": "value",
+                "kind": "number",
+                "value": 123
+            },
+            {
+                "type": "value",
+                "kind": "string",
+                "value": "abc"
+            },
+            {
+                "type": "value",
+                "kind": "string",
+                "value": "def"
+            }
+        ]
+    }
+}

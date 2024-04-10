@@ -1,0 +1,735 @@
+{
+    "description": "complex-query.txt",
+    "input": "var a = query o in orders \r\nfilter all { \r\n    o.status == \"paid\"; \r\n    o.items[?].id == \"0120120\";\r\n} or all {\r\n    o.status == \"pending\";\r\n}\r\nlist {\r\n    orderId: o.id,\r\n    status: o.status,\r\n    user: query u in users filter o.userId == u.id and u.id within 2 to 3 first u ,\r\n    itemIds: query i in o.items list i.id,\r\n    sum: query o in o.items aggregate (p, c) => p + c.cost,\r\n    ... query o in o.items\r\n        aggregate { \r\n            stats: {\r\n                sum: (p = 0, c) => p + c.cost,\r\n                qty: (p, c) => p + c.qty,\r\n\r\n                a: match {\r\n                    a < 3: \"some\";\r\n                    b < 3: \"else\";\r\n                    default: a;\r\n                }\r\n            },\r\n            sum: (p, c) => p + c.cost,\r\n            qty: (p, c) => p + c.qty\r\n        }\r\n}\r\ncluster (orderId, status, user)\r\nsort o.id\r\nsegment 0 to 100;",
+    "tree": {
+        "statements": [
+            {
+                "type": "declare",
+                "kind": "var",
+                "name": "a",
+                "value": {
+                    "type": "query",
+                    "source": {
+                        "kind": "query",
+                        "iterable": {
+                            "v": "o",
+                            "iterable": {
+                                "type": "reference",
+                                "path": [
+                                    {
+                                        "type": "word",
+                                        "value": "orders"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "filter": {
+                        "type": "logical",
+                        "operator": "any",
+                        "operands": [
+                            {
+                                "type": "logical",
+                                "operator": "all",
+                                "operands": [
+                                    {
+                                        "type": "operation",
+                                        "operator": "==",
+                                        "operands": [
+                                            {
+                                                "type": "reference",
+                                                "path": [
+                                                    {
+                                                        "type": "word",
+                                                        "value": "o"
+                                                    },
+                                                    {
+                                                        "type": "word",
+                                                        "value": "status"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "literal",
+                                                "kind": "string",
+                                                "value": "paid"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "operation",
+                                        "operator": "==",
+                                        "operands": [
+                                            {
+                                                "type": "reference",
+                                                "path": [
+                                                    {
+                                                        "type": "word",
+                                                        "value": "o"
+                                                    },
+                                                    {
+                                                        "type": "word",
+                                                        "value": "items"
+                                                    },
+                                                    {
+                                                        "type": "wildcard"
+                                                    },
+                                                    {
+                                                        "type": "word",
+                                                        "value": "id"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "literal",
+                                                "kind": "string",
+                                                "value": "0120120"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "logical",
+                                "operator": "all",
+                                "operands": [
+                                    {
+                                        "type": "operation",
+                                        "operator": "==",
+                                        "operands": [
+                                            {
+                                                "type": "reference",
+                                                "path": [
+                                                    {
+                                                        "type": "word",
+                                                        "value": "o"
+                                                    },
+                                                    {
+                                                        "type": "word",
+                                                        "value": "status"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "literal",
+                                                "kind": "string",
+                                                "value": "pending"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "yield": {
+                        "type": "yield",
+                        "kind": "list",
+                        "value": {
+                            "type": "object",
+                            "properties": [
+                                {
+                                    "key": "orderId",
+                                    "value": {
+                                        "type": "reference",
+                                        "path": [
+                                            {
+                                                "type": "word",
+                                                "value": "o"
+                                            },
+                                            {
+                                                "type": "word",
+                                                "value": "id"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "key": "status",
+                                    "value": {
+                                        "type": "reference",
+                                        "path": [
+                                            {
+                                                "type": "word",
+                                                "value": "o"
+                                            },
+                                            {
+                                                "type": "word",
+                                                "value": "status"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "key": "user",
+                                    "value": {
+                                        "type": "query",
+                                        "source": {
+                                            "kind": "query",
+                                            "iterable": {
+                                                "v": "u",
+                                                "iterable": {
+                                                    "type": "reference",
+                                                    "path": [
+                                                        {
+                                                            "type": "word",
+                                                            "value": "users"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "filter": {
+                                            "type": "logical",
+                                            "operator": "all",
+                                            "operands": [
+                                                {
+                                                    "type": "operation",
+                                                    "operator": "==",
+                                                    "operands": [
+                                                        {
+                                                            "type": "reference",
+                                                            "path": [
+                                                                {
+                                                                    "type": "word",
+                                                                    "value": "o"
+                                                                },
+                                                                {
+                                                                    "type": "word",
+                                                                    "value": "userId"
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "reference",
+                                                            "path": [
+                                                                {
+                                                                    "type": "word",
+                                                                    "value": "u"
+                                                                },
+                                                                {
+                                                                    "type": "word",
+                                                                    "value": "id"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "operation",
+                                                    "operator": "within",
+                                                    "operands": [
+                                                        {
+                                                            "type": "reference",
+                                                            "path": [
+                                                                {
+                                                                    "type": "word",
+                                                                    "value": "u"
+                                                                },
+                                                                {
+                                                                    "type": "word",
+                                                                    "value": "id"
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "literal",
+                                                            "kind": "number",
+                                                            "value": "2"
+                                                        },
+                                                        {
+                                                            "type": "literal",
+                                                            "kind": "number",
+                                                            "value": "3"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "yield": {
+                                            "type": "yield",
+                                            "kind": "first",
+                                            "value": {
+                                                "type": "reference",
+                                                "path": [
+                                                    {
+                                                        "type": "word",
+                                                        "value": "u"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "key": "itemIds",
+                                    "value": {
+                                        "type": "query",
+                                        "source": {
+                                            "kind": "query",
+                                            "iterable": {
+                                                "v": "i",
+                                                "iterable": {
+                                                    "type": "reference",
+                                                    "path": [
+                                                        {
+                                                            "type": "word",
+                                                            "value": "o"
+                                                        },
+                                                        {
+                                                            "type": "word",
+                                                            "value": "items"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "yield": {
+                                            "type": "yield",
+                                            "kind": "list",
+                                            "value": {
+                                                "type": "reference",
+                                                "path": [
+                                                    {
+                                                        "type": "word",
+                                                        "value": "i"
+                                                    },
+                                                    {
+                                                        "type": "word",
+                                                        "value": "id"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "key": "sum",
+                                    "value": {
+                                        "type": "query",
+                                        "source": {
+                                            "kind": "query",
+                                            "iterable": {
+                                                "v": "o",
+                                                "iterable": {
+                                                    "type": "reference",
+                                                    "path": [
+                                                        {
+                                                            "type": "word",
+                                                            "value": "o"
+                                                        },
+                                                        {
+                                                            "type": "word",
+                                                            "value": "items"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "yield": {
+                                            "type": "yield",
+                                            "kind": "aggregate",
+                                            "value": {
+                                                "type": "lambda",
+                                                "arguments": [
+                                                    {
+                                                        "name": "p"
+                                                    },
+                                                    {
+                                                        "name": "c"
+                                                    }
+                                                ],
+                                                "expression": {
+                                                    "type": "operation",
+                                                    "operator": "+",
+                                                    "operands": [
+                                                        {
+                                                            "type": "reference",
+                                                            "path": [
+                                                                {
+                                                                    "type": "word",
+                                                                    "value": "p"
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "reference",
+                                                            "path": [
+                                                                {
+                                                                    "type": "word",
+                                                                    "value": "c"
+                                                                },
+                                                                {
+                                                                    "type": "word",
+                                                                    "value": "cost"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "type": "spread",
+                                    "value": {
+                                        "type": "query",
+                                        "source": {
+                                            "kind": "query",
+                                            "iterable": {
+                                                "v": "o",
+                                                "iterable": {
+                                                    "type": "reference",
+                                                    "path": [
+                                                        {
+                                                            "type": "word",
+                                                            "value": "o"
+                                                        },
+                                                        {
+                                                            "type": "word",
+                                                            "value": "items"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "yield": {
+                                            "type": "yield",
+                                            "kind": "aggregate",
+                                            "value": {
+                                                "type": "object",
+                                                "properties": [
+                                                    {
+                                                        "key": "stats",
+                                                        "value": {
+                                                            "type": "object",
+                                                            "properties": [
+                                                                {
+                                                                    "key": "sum",
+                                                                    "value": {
+                                                                        "type": "lambda",
+                                                                        "arguments": [
+                                                                            {
+                                                                                "name": "p",
+                                                                                "default": {
+                                                                                    "type": "literal",
+                                                                                    "kind": "number",
+                                                                                    "value": "0"
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "name": "c"
+                                                                            }
+                                                                        ],
+                                                                        "expression": {
+                                                                            "type": "operation",
+                                                                            "operator": "+",
+                                                                            "operands": [
+                                                                                {
+                                                                                    "type": "reference",
+                                                                                    "path": [
+                                                                                        {
+                                                                                            "type": "word",
+                                                                                            "value": "p"
+                                                                                        }
+                                                                                    ]
+                                                                                },
+                                                                                {
+                                                                                    "type": "reference",
+                                                                                    "path": [
+                                                                                        {
+                                                                                            "type": "word",
+                                                                                            "value": "c"
+                                                                                        },
+                                                                                        {
+                                                                                            "type": "word",
+                                                                                            "value": "cost"
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "key": "qty",
+                                                                    "value": {
+                                                                        "type": "lambda",
+                                                                        "arguments": [
+                                                                            {
+                                                                                "name": "p"
+                                                                            },
+                                                                            {
+                                                                                "name": "c"
+                                                                            }
+                                                                        ],
+                                                                        "expression": {
+                                                                            "type": "operation",
+                                                                            "operator": "+",
+                                                                            "operands": [
+                                                                                {
+                                                                                    "type": "reference",
+                                                                                    "path": [
+                                                                                        {
+                                                                                            "type": "word",
+                                                                                            "value": "p"
+                                                                                        }
+                                                                                    ]
+                                                                                },
+                                                                                {
+                                                                                    "type": "reference",
+                                                                                    "path": [
+                                                                                        {
+                                                                                            "type": "word",
+                                                                                            "value": "c"
+                                                                                        },
+                                                                                        {
+                                                                                            "type": "word",
+                                                                                            "value": "qty"
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "key": "a",
+                                                                    "value": {
+                                                                        "type": "match",
+                                                                        "statements": {
+                                                                            "conditions": [
+                                                                                {
+                                                                                    "condition": {
+                                                                                        "type": "operation",
+                                                                                        "operator": "<",
+                                                                                        "operands": [
+                                                                                            {
+                                                                                                "type": "reference",
+                                                                                                "path": [
+                                                                                                    {
+                                                                                                        "type": "word",
+                                                                                                        "value": "a"
+                                                                                                    }
+                                                                                                ]
+                                                                                            },
+                                                                                            {
+                                                                                                "type": "literal",
+                                                                                                "kind": "number",
+                                                                                                "value": "3"
+                                                                                            }
+                                                                                        ]
+                                                                                    },
+                                                                                    "value": {
+                                                                                        "type": "literal",
+                                                                                        "kind": "string",
+                                                                                        "value": "some"
+                                                                                    }
+                                                                                },
+                                                                                {
+                                                                                    "condition": {
+                                                                                        "type": "operation",
+                                                                                        "operator": "<",
+                                                                                        "operands": [
+                                                                                            {
+                                                                                                "type": "reference",
+                                                                                                "path": [
+                                                                                                    {
+                                                                                                        "type": "word",
+                                                                                                        "value": "b"
+                                                                                                    }
+                                                                                                ]
+                                                                                            },
+                                                                                            {
+                                                                                                "type": "literal",
+                                                                                                "kind": "number",
+                                                                                                "value": "3"
+                                                                                            }
+                                                                                        ]
+                                                                                    },
+                                                                                    "value": {
+                                                                                        "type": "literal",
+                                                                                        "kind": "string",
+                                                                                        "value": "else"
+                                                                                    }
+                                                                                }
+                                                                            ],
+                                                                            "default": {
+                                                                                "type": "default",
+                                                                                "value": {
+                                                                                    "type": "reference",
+                                                                                    "path": [
+                                                                                        {
+                                                                                            "type": "word",
+                                                                                            "value": "a"
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "key": "sum",
+                                                        "value": {
+                                                            "type": "lambda",
+                                                            "arguments": [
+                                                                {
+                                                                    "name": "p"
+                                                                },
+                                                                {
+                                                                    "name": "c"
+                                                                }
+                                                            ],
+                                                            "expression": {
+                                                                "type": "operation",
+                                                                "operator": "+",
+                                                                "operands": [
+                                                                    {
+                                                                        "type": "reference",
+                                                                        "path": [
+                                                                            {
+                                                                                "type": "word",
+                                                                                "value": "p"
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        "type": "reference",
+                                                                        "path": [
+                                                                            {
+                                                                                "type": "word",
+                                                                                "value": "c"
+                                                                            },
+                                                                            {
+                                                                                "type": "word",
+                                                                                "value": "cost"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "key": "qty",
+                                                        "value": {
+                                                            "type": "lambda",
+                                                            "arguments": [
+                                                                {
+                                                                    "name": "p"
+                                                                },
+                                                                {
+                                                                    "name": "c"
+                                                                }
+                                                            ],
+                                                            "expression": {
+                                                                "type": "operation",
+                                                                "operator": "+",
+                                                                "operands": [
+                                                                    {
+                                                                        "type": "reference",
+                                                                        "path": [
+                                                                            {
+                                                                                "type": "word",
+                                                                                "value": "p"
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        "type": "reference",
+                                                                        "path": [
+                                                                            {
+                                                                                "type": "word",
+                                                                                "value": "c"
+                                                                            },
+                                                                            {
+                                                                                "type": "word",
+                                                                                "value": "qty"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "cluster": [
+                        {
+                            "type": "reference",
+                            "path": [
+                                {
+                                    "type": "word",
+                                    "value": "orderId"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "reference",
+                            "path": [
+                                {
+                                    "type": "word",
+                                    "value": "status"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "reference",
+                            "path": [
+                                {
+                                    "type": "word",
+                                    "value": "user"
+                                }
+                            ]
+                        }
+                    ],
+                    "sort": {
+                        "expression": {
+                            "type": "reference",
+                            "path": [
+                                {
+                                    "type": "word",
+                                    "value": "o"
+                                },
+                                {
+                                    "type": "word",
+                                    "value": "id"
+                                }
+                            ]
+                        }
+                    },
+                    "slice": {
+                        "low": {
+                            "type": "literal",
+                            "kind": "number",
+                            "value": "0"
+                        },
+                        "high": {
+                            "type": "literal",
+                            "kind": "number",
+                            "value": "100"
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    "result": {
+        "result": {
+            "type": "control",
+            "kind": "error",
+            "value": "Variable not declared: orders"
+        },
+        "scope": {}
+    }
+}

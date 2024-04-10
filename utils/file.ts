@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from "fs";
+import { readFileSync, readdirSync, writeFileSync } from "fs";
 import { resolve } from "path";
 
 
@@ -12,4 +12,12 @@ export function Write(filename, body) {
 
 export function Fullpath(dir: string, file: string) {
     return resolve(dir, file)
+}
+
+export function ReadJSON(filename) {
+    return JSON.parse(Read(filename));
+}
+
+export function ListDirectory(path) {
+    return readdirSync(path);
 }

@@ -1,0 +1,31 @@
+{
+    "description": "expression.txt",
+    "input": "$ == 'Jog'",
+    "tree": {
+        "expression": {
+            "type": "operation",
+            "operator": "==",
+            "operands": [
+                {
+                    "type": "reference",
+                    "path": [
+                        {
+                            "type": "word",
+                            "value": "$"
+                        }
+                    ]
+                },
+                {
+                    "type": "literal",
+                    "kind": "string",
+                    "value": "Jog"
+                }
+            ]
+        }
+    },
+    "result": {
+        "type": "control",
+        "kind": "error",
+        "value": "Variable not declared: $"
+    }
+}
