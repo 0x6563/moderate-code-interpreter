@@ -5,22 +5,22 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsx compile.ts && tsc --build",
+    "build": "tsx ./scripts/compile.ts && tsc --build",
     "test": "node --test --import tsx --test-reporter ./tests/reporter.mjs  tests/*.test.ts",
     "do": "npm run test && npm run build"
   },
   "author": "0x6563",
   "license": "LGPL-3.0",
   "dependencies": {
-    "grammar-well": "^1.2.3"
+    "grammar-well": "^2.0.0"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/0x6563/moderate-code-interpreter.git"
   },
   "devDependencies": {
-    "@types/node": "^20.12.7",
-    "tsx": "^4.7.2",
-    "typescript": "^5.4.4"
+    "@types/node": "^22.10.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
   }
 }
