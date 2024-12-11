@@ -1,4 +1,4 @@
-import { Parse as GWParser } from 'grammar-well';
+import { Parse as GWParser } from 'grammar-well/parser';
 import grammar from './grammar.js';
 export function Parse(sample) {
     return GWParser(new grammar(), sample, { algorithm: 'earley' }, 'first');

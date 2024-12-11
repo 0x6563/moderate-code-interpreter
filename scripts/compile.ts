@@ -1,6 +1,6 @@
 import { Generate } from "grammar-well";
 import { FileSystemResolver } from "grammar-well/import-resolvers/filesystem";
-import { Read, Write } from "../utils/file";
+import { readFileSync, writeFileSync } from "fs";
 await Transpile('./src/grammar.well');
 
 async function Transpile(path) {
@@ -18,3 +18,13 @@ async function Transpile(path) {
     });
     Write(path.replace(/\.well$/, '.js'), js);
 }
+
+
+export function Read(filename) {
+    return readFileSync(filename, 'utf-8')
+}
+
+export function Write(filename, body) {
+    return writeFileSync(filename, body, 'utf8');
+}
+
