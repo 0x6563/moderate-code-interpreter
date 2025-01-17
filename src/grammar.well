@@ -59,6 +59,7 @@ lexer {
 		- when ";" tag "l_semi" highlight "keyword"
 		- when ":" tag "l_col" highlight "keyword"
 		- when "!" tag "l_exc" highlight "keyword"
+		- before r:{\.\s*[a-z][_a-zA-Z$][_a-zA-Z$\d]*} goto dotescape
 		- when "." tag "l_dot"
 		- when "," tag "l_comma" highlight "delimiter"
 		- when "(" tag "l_lparen" highlight "delimiter" inset
@@ -68,6 +69,12 @@ lexer {
 		- when "[" tag "l_lbrack" highlight "delimiter" inset
 		- when "]" tag "l_rbrack" highlight "delimiter" pop
 		- when r:{\s+} tag "ws"
+
+	[dotescape]
+		- when "." tag "l_dot"
+		- when r:{\s+} tag "ws"
+		- when r:{[_a-zA-Z$][_a-zA-Z$\d]*} tag "word" pop
+
 
 	[keywords]
 		- when r:{\@} tag "keyword" highlight "keyword"

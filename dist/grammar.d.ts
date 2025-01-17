@@ -907,6 +907,22 @@ declare class grammar {
         lexer: {
             start: string;
             states: {
+                dotescape: {
+                    regex: RegExp;
+                    rules: ({
+                        tag: string[];
+                        when: string;
+                        pop?: undefined;
+                    } | {
+                        tag: string[];
+                        when: RegExp;
+                        pop?: undefined;
+                    } | {
+                        pop: number;
+                        tag: string[];
+                        when: RegExp;
+                    })[];
+                };
                 dqstring: {
                     regex: RegExp;
                     rules: ({
@@ -941,6 +957,7 @@ declare class grammar {
                         tag: string[];
                         when: RegExp;
                         goto?: undefined;
+                        before?: undefined;
                         inset?: undefined;
                         pop?: undefined;
                     } | {
@@ -948,6 +965,7 @@ declare class grammar {
                         highlight: string;
                         tag: string[];
                         when: RegExp;
+                        before?: undefined;
                         inset?: undefined;
                         pop?: undefined;
                     } | {
@@ -955,6 +973,7 @@ declare class grammar {
                         when: RegExp;
                         highlight?: undefined;
                         goto?: undefined;
+                        before?: undefined;
                         inset?: undefined;
                         pop?: undefined;
                     } | {
@@ -962,6 +981,7 @@ declare class grammar {
                         tag: string[];
                         when: string;
                         goto?: undefined;
+                        before?: undefined;
                         inset?: undefined;
                         pop?: undefined;
                     } | {
@@ -969,6 +989,15 @@ declare class grammar {
                         when: string;
                         highlight?: undefined;
                         goto?: undefined;
+                        before?: undefined;
+                        inset?: undefined;
+                        pop?: undefined;
+                    } | {
+                        before: boolean;
+                        goto: string;
+                        when: RegExp;
+                        highlight?: undefined;
+                        tag?: undefined;
                         inset?: undefined;
                         pop?: undefined;
                     } | {
@@ -977,6 +1006,7 @@ declare class grammar {
                         tag: string[];
                         when: string;
                         goto?: undefined;
+                        before?: undefined;
                         pop?: undefined;
                     } | {
                         highlight: string;
@@ -984,6 +1014,7 @@ declare class grammar {
                         tag: string[];
                         when: string;
                         goto?: undefined;
+                        before?: undefined;
                         inset?: undefined;
                     })[];
                 };

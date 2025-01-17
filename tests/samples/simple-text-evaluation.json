@@ -1,6 +1,6 @@
 {
     "description": "Simple Text Evaluation",
-    "input": "$ == 'Text'",
+    "input": "$.var == 'Text'",
     "tree": {
         "expression": {
             "type": "operation",
@@ -12,6 +12,10 @@
                         {
                             "type": "word",
                             "value": "$"
+                        },
+                        {
+                            "type": "word",
+                            "value": "var"
                         }
                     ]
                 },
