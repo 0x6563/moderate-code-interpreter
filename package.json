@@ -19,8 +19,8 @@
     "url": "https://github.com/0x6563/moderate-code-interpreter.git"
   },
   "devDependencies": {
-    "@types/node": "^22.10.2",
+    "@types/node": "^22.10.7",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   }
 }
