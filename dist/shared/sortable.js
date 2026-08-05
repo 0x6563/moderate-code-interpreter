@@ -1,7 +1,4 @@
 export class Sortable {
-    compare;
-    low;
-    high;
     set = [];
     get first() {
         return 0;
@@ -22,6 +19,9 @@ export class Sortable {
         return this.set.length;
     }
     cap;
+    compare;
+    low;
+    high;
     constructor(compare, low, high) {
         this.compare = compare;
         this.low = low;

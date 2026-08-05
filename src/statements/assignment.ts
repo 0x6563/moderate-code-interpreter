@@ -1,8 +1,8 @@
-import { Reference, ResolveReferencePathItem } from "../expressions/reference";
-import { ResolveValue } from "../runner";
-import { Context } from "../shared/context";
-import { Control } from "../shared/value";
-import { ControlType, ReferencePath, StatementAssignment } from "../types";
+import { Reference, ResolveReferencePathItem } from "../expressions/reference.ts";
+import { ResolveValue } from "../runner.ts";
+import { Context } from "../shared/context.ts";
+import { Control } from "../shared/value.ts";
+import type { ControlType, ReferencePath, StatementAssignment } from "../types.ts";
 
 export function Assignment(context: Context, statement: StatementAssignment): ControlType | void {
     const r = ResolveValue(context, statement.value);

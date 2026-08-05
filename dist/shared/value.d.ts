@@ -1,11 +1,12 @@
-import { ControlType, ValueType } from "../types";
+import type { ControlType, TDataArray, ValueType } from "../types.ts";
 type VORC<T> = T extends 'value' ? ValueType : ControlType;
 export declare function Wrap<T extends 'value' | 'control'>(type: T, kind: VORC<T>['kind'], value: any): VORC<T>;
 export declare function Value(kind: ValueType['kind'], value: any): ValueType;
 export declare function Control(kind: ControlType['kind'], value: any): ControlType;
+export declare function ArrayAccessor(items: ValueType[]): TDataArray;
 export declare function DynamicValue(value: any): ValueType;
 export declare function Marshal(value: any): ValueType;
-export declare function Unmarshal(value: ValueType): any;
+export declare function Unmarshal(value: ValueType): {};
 export declare function GetValueType(r: any): "string" | "number" | "bigint" | "boolean" | "symbol" | "undefined" | "object" | "function" | "array";
 export declare function Truthy(val: ControlType | ValueType): ControlType | boolean;
 export {};

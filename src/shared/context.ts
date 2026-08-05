@@ -1,5 +1,5 @@
-import { ControlType, Scope, Statement, ValueType } from "../types";
-import { Control } from "./value";
+import type { ControlType, Scope, Statement, ValueType } from "../types.ts";
+import { Control } from "./value.ts";
 export class Context {
     scope: Scope = Object.create(null);
     private stack: Context[];

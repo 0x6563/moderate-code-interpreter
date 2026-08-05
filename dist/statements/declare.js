@@ -1,4 +1,5 @@
-import { ResolveValue } from "../runner";
+import { ResolveValue } from "../runner.js";
+import { Context } from "../shared/context.js";
 export function Declare(context, statement) {
     if (statement.kind === 'function') {
         return context.declare('const', statement.name, { type: 'value', kind: 'function', value: { context, args: statement.args, statements: statement.statements } });

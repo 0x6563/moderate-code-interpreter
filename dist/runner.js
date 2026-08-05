@@ -1,19 +1,19 @@
-import { Control } from "./shared/value";
-import { Context } from "./shared/context";
-import { Assignment } from "./statements/assignment";
-import { Declare } from "./statements/declare";
-import { If } from "./statements/if";
-import { Scan } from "./statements/scan";
-import { For } from "./statements/for";
-import { While } from "./statements/while";
-import { Operators } from "./expressions/operators";
-import { Literals } from "./expressions/literals";
-import { Logical } from "./expressions/logical";
-import { ObjectLiteral } from "./expressions/object";
-import { Reference } from "./expressions/reference";
-import { Query } from "./expressions/query";
-import { ArrayLiteral } from "./expressions/array";
-import { Call } from "./expressions/call";
+import { Control } from "./shared/value.js";
+import { Context } from "./shared/context.js";
+import { Assignment } from "./statements/assignment.js";
+import { Declare } from "./statements/declare.js";
+import { If } from "./statements/if.js";
+import { Scan } from "./statements/scan.js";
+import { For } from "./statements/for.js";
+import { While } from "./statements/while.js";
+import { Operators } from "./expressions/operators.js";
+import { Literals } from "./expressions/literals.js";
+import { Logical } from "./expressions/logical.js";
+import { ObjectLiteral } from "./expressions/object.js";
+import { Reference } from "./expressions/reference.js";
+import { Query } from "./expressions/query.js";
+import { ArrayLiteral } from "./expressions/array.js";
+import { Call } from "./expressions/call.js";
 export function Run(tree, data) {
     const context = new Context();
     if (data)

@@ -1,10 +1,10 @@
-import { ResolveValue } from "../runner";
-import { Context } from "../shared/context";
-import { Value } from "../shared/value";
-import { ArrayLiteralExpression, ControlType, ValueTypeArray } from "../types";
+import { ResolveValue } from "../runner.ts";
+import { Context } from "../shared/context.ts";
+import { ArrayAccessor, Value } from "../shared/value.ts";
+import type { ArrayLiteralExpression, ControlType, ValueType, ValueTypeArray } from "../types.ts";
 
 export function ArrayLiteral(context: Context, expression: ArrayLiteralExpression): ControlType | ValueTypeArray {
-    const result = [];
+    const result: ValueType[] = [];
     for (const prop of expression.items) {
         const value = ResolveValue(context, prop);
         if (value.type == 'control') {
@@ -12,5 +12,5 @@ export function ArrayLiteral(context: Context, expression: ArrayLiteralExpressio
         }
         result.push(value);
     }
-    return Value('array', result) as ValueTypeArray;
+    return Value('array', ArrayAccessor(result)) as ValueTypeArray;
 }

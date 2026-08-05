@@ -1,4 +1,4 @@
-import { Control } from "./value";
+import { Control } from "./value.js";
 export class Context {
     scope = Object.create(null);
     stack;

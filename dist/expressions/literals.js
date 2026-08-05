@@ -1,4 +1,4 @@
-import { Value } from "../shared/value";
+import { Value } from "../shared/value.js";
 export const Literals = {
     "number": (string) => Value('number', parseFloat(string)),
     "boolean": (string) => Value('boolean', string === "true"),

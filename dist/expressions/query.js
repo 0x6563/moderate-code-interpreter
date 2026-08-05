@@ -1,7 +1,8 @@
-import { ResolveValue } from "../runner";
-import { Iterate, IterateIterable } from "../shared/iterable";
-import { Control, Truthy, Value } from "../shared/value";
-import { Sortable } from "../shared/sortable";
+import { ResolveValue } from "../runner.js";
+import { Iterate, IterateIterable } from "../shared/iterable.js";
+import { Context } from "../shared/context.js";
+import { ArrayAccessor, Control, Truthy, Value } from "../shared/value.js";
+import { Sortable } from "../shared/sortable.js";
 export function Query(context, query) {
     const source = ResolveValue(context, query.source.iterable.iterable);
     if (!source)
@@ -15,7 +16,7 @@ export function Query(context, query) {
         return low;
     if (low.kind != 'number')
         return Control('error', `Unable to slice by ${low.kind}`);
-    const high = query?.slice?.high ? ResolveValue(context, query.slice.high) : Value('number', source.value.length);
+    const high = query?.slice?.high ? ResolveValue(context, query.slice.high) : Value('number', source.value.length.value);
     if (high.type == 'control')
         return high;
     if (high.kind != 'number')
@@ -62,11 +63,11 @@ export function Query(context, query) {
     }
     const sorted = sorter.extract();
     const result = [];
-    const loop2 = Iterate(context, Value('array', sorted), query.source.iterable.k, query.source.iterable.v, (nested, k) => {
+    const loop2 = Iterate(context, Value('array', ArrayAccessor(sorted)), query.source.iterable.k, query.source.iterable.v, (nested, k) => {
         const r = ResolveValue(nested, query.yield.value);
         if (r.type == 'control')
             return r;
-        result.push(r.value);
+        result.push(r);
     });
     if (loop2 && loop2.kind == 'error') {
         return loop2;
@@ -74,6 +75,6 @@ export function Query(context, query) {
     if (query.yield.kind === 'first') {
         return result[0];
     }
-    return Value('array', result);
+    return Value('array', ArrayAccessor(result));
 }
 //# sourceMappingURL=query.js.map

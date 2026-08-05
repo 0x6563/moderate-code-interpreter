@@ -1,7 +1,7 @@
 import test, { describe } from "node:test";
-import { Parse, Run } from "../src";
+import { Parse, Run } from "../src/index.ts";
 import assert from "node:assert";
-import { ListDirectory, ReadJSON } from "../utils/file";
+import { ListDirectory, ReadJSON } from "../utils/file.ts";
 const BaseDir = 'tests/samples/'
 const files = ListDirectory(BaseDir)
 

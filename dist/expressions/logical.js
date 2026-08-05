@@ -1,5 +1,6 @@
-import { ResolveValue } from "../runner";
-import { Truthy, Value } from "../shared/value";
+import { ResolveValue } from "../runner.js";
+import { Context } from "../shared/context.js";
+import { Truthy, Value } from "../shared/value.js";
 export const Logical = {
     'all': (context, operands) => {
         for (let i = 0; i < operands.length; i++) {

@@ -1,7 +1,7 @@
-import { ResolveValue } from "../runner";
-import { Context } from "../shared/context";
-import { Control, Wrap } from "../shared/value";
-import { ControlType, ObjectLiteralExpression, ValueTypeObject } from "../types";
+import { ResolveValue } from "../runner.ts";
+import { Context } from "../shared/context.ts";
+import { Control, Wrap } from "../shared/value.ts";
+import type { ControlType, ObjectLiteralExpression, ValueTypeObject } from "../types.ts";
 
 export function ObjectLiteral(context: Context, expression: ObjectLiteralExpression): ValueTypeObject | ControlType {
     const result: ValueTypeObject['value'] = {};

@@ -1,5 +1,5 @@
-import { ControlType, ReferenceExpression, ValueType } from "../types";
-import { Context } from "../shared/context";
+import type { ControlType, ReferenceExpression, ValueType } from "../types.ts";
+import { Context } from "../shared/context.ts";
 export declare function Reference(context: Context, { path }: {
     path: ReferenceExpression['path'];
 }): ValueType | ControlType;

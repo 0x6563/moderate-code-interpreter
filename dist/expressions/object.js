@@ -1,5 +1,6 @@
-import { ResolveValue } from "../runner";
-import { Control, Wrap } from "../shared/value";
+import { ResolveValue } from "../runner.js";
+import { Context } from "../shared/context.js";
+import { Control, Wrap } from "../shared/value.js";
 export function ObjectLiteral(context, expression) {
     const result = {};
     for (const prop of expression.properties) {

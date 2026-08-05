@@ -1,4 +1,4 @@
-import { ControlType, ValueType } from "../types";
+import type { ControlType, ValueType } from "../types.ts";
 export declare const Operators: {
     number: {
         like: (values: ValueType[]) => ValueType | ControlType;

@@ -1,5 +1,6 @@
-import { ResolveStatements, ResolveValue } from "../runner";
-import { Truthy } from "../shared/value";
+import { ResolveStatements, ResolveValue } from "../runner.js";
+import { Context } from "../shared/context.js";
+import { Truthy } from "../shared/value.js";
 export function If(context, { statements }) {
     for (const statement of statements) {
         const r = !statement.condition || Truthy(ResolveValue(context, statement.condition));

@@ -1,7 +1,7 @@
-import { ResolveStatements, ResolveValue } from "../runner";
-import { Context } from "../shared/context";
-import { Truthy } from "../shared/value";
-import { StatementWhile } from "../types";
+import { ResolveStatements, ResolveValue } from "../runner.ts";
+import { Context } from "../shared/context.ts";
+import { Truthy } from "../shared/value.ts";
+import type { StatementWhile } from "../types.ts";
 
 export function While(context: Context, statement: StatementWhile) {
     let truthy;

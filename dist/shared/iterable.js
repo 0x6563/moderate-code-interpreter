@@ -1,5 +1,6 @@
-import { ResolveValue } from "../runner";
-import { Control, Value } from "./value";
+import { ResolveValue } from "../runner.js";
+import { Control, Value } from "./value.js";
+import { Context } from "./context.js";
 export function IterateIterable(context, iterable, callback) {
     return Iterate(context, ResolveValue(context, iterable.iterable), iterable.k, iterable.v, callback);
 }
@@ -27,7 +28,8 @@ export function Iterate(context, value, keyName, valueName, callback) {
     }
 }
 function* ArrayIterate(ary) {
-    for (let i = 0; i < ary.length; i++) {
+    const length = ary.length.value;
+    for (let i = 0; i < length; i++) {
         yield [Value('number', i), ary[i]];
     }
 }

@@ -1,20 +1,20 @@
-import { Statement, ValueType, Expression, ControlType, ScopeResult, ObjectLiteralExpression, ValueTypeObject } from "./types";
-import { Control } from "./shared/value";
-import { Context } from "./shared/context";
-import { Assignment } from "./statements/assignment";
-import { Declare } from "./statements/declare";
-import { If } from "./statements/if";
-import { Scan } from "./statements/scan";
-import { For } from "./statements/for";
-import { While } from "./statements/while";
-import { Operators } from "./expressions/operators";
-import { Literals } from "./expressions/literals";
-import { Logical } from "./expressions/logical";
-import { ObjectLiteral } from "./expressions/object";
-import { Reference } from "./expressions/reference";
-import { Query } from "./expressions/query";
-import { ArrayLiteral } from "./expressions/array";
-import { Call } from "./expressions/call";
+import type { Statement, ValueType, Expression, ControlType, ScopeResult, ObjectLiteralExpression, ValueTypeObject } from "./types.ts";
+import { Control } from "./shared/value.ts";
+import { Context } from "./shared/context.ts";
+import { Assignment } from "./statements/assignment.ts";
+import { Declare } from "./statements/declare.ts";
+import { If } from "./statements/if.ts";
+import { Scan } from "./statements/scan.ts";
+import { For } from "./statements/for.ts";
+import { While } from "./statements/while.ts";
+import { Operators } from "./expressions/operators.ts";
+import { Literals } from "./expressions/literals.ts";
+import { Logical } from "./expressions/logical.ts";
+import { ObjectLiteral } from "./expressions/object.ts";
+import { Reference } from "./expressions/reference.ts";
+import { Query } from "./expressions/query.ts";
+import { ArrayLiteral } from "./expressions/array.ts";
+import { Call } from "./expressions/call.ts";
 
 export function Run(tree: any, data?: ValueTypeObject['value']) {
     const context = new Context();

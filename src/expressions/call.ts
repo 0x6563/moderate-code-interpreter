@@ -1,7 +1,7 @@
-import { ResolveStatements, ResolveValue } from "../runner";
-import { Context } from "../shared/context";
-import { Control, Value } from "../shared/value";
-import { CallExpression } from "../types";
+import { ResolveStatements, ResolveValue } from "../runner.ts";
+import { Context } from "../shared/context.ts";
+import { Control, Value } from "../shared/value.ts";
+import type { CallExpression } from "../types.ts";
 
 export function Call(context: Context, expression: CallExpression) {
     const r = context.get(expression.name);

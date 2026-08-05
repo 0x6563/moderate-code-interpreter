@@ -98,8 +98,16 @@
                     "type": "value",
                     "kind": "array",
                     "value": [
-                        3,
-                        3
+                        {
+                            "type": "value",
+                            "kind": "number",
+                            "value": 3
+                        },
+                        {
+                            "type": "value",
+                            "kind": "number",
+                            "value": 3
+                        }
                     ]
                 }
             }

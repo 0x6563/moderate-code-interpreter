@@ -1,7 +1,7 @@
 import test, { describe } from "node:test";
-import { Parse, Run } from "../src";
+import { Parse, Run } from "../src/index.ts";
 import assert from "node:assert";
-import { ValueType } from "../src/types";
+import type { ValueType } from "../src/types.ts";
 describe('Expression', () => {
     describe('Operators', () => {
         describe('number', () => {
@@ -98,11 +98,20 @@ describe('Expression', () => {
             test('!=', (context) => {
                 context.todo();
             })
-            test('..', (context) => {
-                context.todo();
+            test('..', () => {
+                const result = SampleRunner('[1,2] .. [3,4]');
+                assert.equal(result.length.value, 4);
+                assert.equal(result[0].value, 1);
+                assert.equal(result[1].value, 2);
+                assert.equal(result[2].value, 3);
+                assert.equal(result[3].value, 4);
             })
-            test('+', (context) => {
-                context.todo();
+            test('+', () => {
+                const result = SampleRunner('[1,2] + 3');
+                assert.equal(result.length.value, 3);
+                assert.equal(result[0].value, 1);
+                assert.equal(result[1].value, 2);
+                assert.equal(result[2].value, 3);
             })
         })
         describe('object', () => {

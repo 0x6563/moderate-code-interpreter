@@ -1,4 +1,4 @@
-import { Value } from "../shared/value"
+import { Value } from "../shared/value.ts"
 
 export const Literals = {
     "number": (string: string) => Value('number', parseFloat(string)),

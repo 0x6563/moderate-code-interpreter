@@ -1,7 +1,7 @@
-import { ResolveStatements, ResolveValue } from "../runner";
-import { Context } from "../shared/context";
-import { Truthy } from "../shared/value";
-import { ControlType, StatementConditional } from "../types";
+import { ResolveStatements, ResolveValue } from "../runner.ts";
+import { Context } from "../shared/context.ts";
+import { Truthy } from "../shared/value.ts";
+import type { ControlType, StatementConditional } from "../types.ts";
 
 export function If(context: Context, {  statements }: StatementConditional): ControlType | void {
     // statements = [if, elseif, elseif, else]

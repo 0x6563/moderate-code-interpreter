@@ -1,5 +1,6 @@
-import { ResolveValue } from "../runner";
-import { Control } from "../shared/value";
+import { ResolveValue } from "../runner.js";
+import { Control } from "../shared/value.js";
+import { Context } from "../shared/context.js";
 export function Reference(context, { path }) {
     const k = ResolveReferencePathItem(context, path[0]);
     if (typeof k != 'string') {

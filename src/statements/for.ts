@@ -1,7 +1,7 @@
-import { ResolveStatement, ResolveStatements, ResolveValue } from "../runner";
-import { Context } from "../shared/context";
-import { Truthy } from "../shared/value";
-import { StatementFor } from "../types";
+import { ResolveStatement, ResolveStatements, ResolveValue } from "../runner.ts";
+import { Context } from "../shared/context.ts";
+import { Truthy } from "../shared/value.ts";
+import type { StatementFor } from "../types.ts";
 
 export function For(context: Context, statement: StatementFor) {
     const nested = context.fork();

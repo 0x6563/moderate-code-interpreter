@@ -1,5 +1,5 @@
-export { TYPES } from "./grammar";
-import { Context } from "./shared/context";
+export { TYPES } from "./grammar.js";
+import { Context } from "./shared/context.ts";
 export type ValueTypeUndefined = {
     type: 'value';
     kind: "undefined";
@@ -35,8 +35,12 @@ export type ValueTypeObject = {
 export type ValueTypeArray = {
     type: 'value';
     kind: "array";
-    value: ValueType[];
+    value: TDataArray;
 };
+export interface TDataArray {
+    length: ValueTypeNumber;
+    [index: number]: ValueType;
+}
 export type ValueTypeCustom = {
     type: 'value';
     kind: "custom";

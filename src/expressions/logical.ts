@@ -1,6 +1,6 @@
-import { ResolveValue } from "../runner";
-import { Context } from "../shared/context";
-import { Truthy, Value } from "../shared/value";
+import { ResolveValue } from "../runner.ts";
+import { Context } from "../shared/context.ts";
+import { Truthy, Value } from "../shared/value.ts";
 
 export const Logical = {
     'all': (context: Context, operands) => {

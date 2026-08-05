@@ -1,7 +1,7 @@
-import { ResolveValue } from "../runner";
-import { ControlType, ReferenceExpression, ValueType } from "../types";
-import { Control } from "../shared/value";
-import { Context } from "../shared/context";
+import { ResolveValue } from "../runner.ts";
+import type { ControlType, ReferenceExpression, ValueType } from "../types.ts";
+import { Control } from "../shared/value.ts";
+import { Context } from "../shared/context.ts";
 
 export function Reference(context: Context, { path }: { path: ReferenceExpression['path'] }) {
     const k = ResolveReferencePathItem(context, path[0]);

@@ -1,5 +1,6 @@
-import { ResolveStatements, ResolveValue } from "../runner";
-import { Truthy } from "../shared/value";
+import { ResolveStatements, ResolveValue } from "../runner.js";
+import { Context } from "../shared/context.js";
+import { Truthy } from "../shared/value.js";
 export function While(context, statement) {
     let truthy;
     do {

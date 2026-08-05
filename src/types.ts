@@ -1,5 +1,5 @@
-export { TYPES } from "./grammar";
-import { Context } from "./shared/context";
+export { TYPES } from "./grammar.js";
+import { Context } from "./shared/context.ts";
 
 export type ValueTypeUndefined = { type: 'value', kind: "undefined", value: undefined };
 export type ValueTypeNull = { type: 'value', kind: "null", value: null };
@@ -7,7 +7,11 @@ export type ValueTypeString = { type: 'value', kind: "string", value: string };
 export type ValueTypeNumber = { type: 'value', kind: "number", value: number };
 export type ValueTypeBoolean = { type: 'value', kind: "boolean", value: boolean }
 export type ValueTypeObject = { type: 'value', kind: "object", value: { [key: string]: ValueType } };
-export type ValueTypeArray = { type: 'value', kind: "array", value: ValueType[] };
+export type ValueTypeArray = { type: 'value', kind: "array", value: TDataArray };
+export interface TDataArray {
+    length: ValueTypeNumber;
+    [index: number]: ValueType;
+}
 export type ValueTypeCustom = { type: 'value', kind: "custom", sub: string; value: never };
 export type ValueTypeFunction = { type: 'value', kind: "function", value: { context: Context, args: FunctionArgument[]; statements: Statement[] } };
 

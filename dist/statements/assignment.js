@@ -1,6 +1,7 @@
-import { Reference, ResolveReferencePathItem } from "../expressions/reference";
-import { ResolveValue } from "../runner";
-import { Control } from "../shared/value";
+import { Reference, ResolveReferencePathItem } from "../expressions/reference.js";
+import { ResolveValue } from "../runner.js";
+import { Context } from "../shared/context.js";
+import { Control } from "../shared/value.js";
 export function Assignment(context, statement) {
     const r = ResolveValue(context, statement.value);
     const path = statement.reference.path;

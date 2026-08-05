@@ -1,6 +1,6 @@
-import { ResolveValue } from "../runner";
-import { Context } from "../shared/context";
-import { StatementDeclareConstant, StatementDeclareFunction, StatementDeclareVariable } from "../types";
+import { ResolveValue } from "../runner.ts";
+import { Context } from "../shared/context.ts";
+import type { StatementDeclareConstant, StatementDeclareFunction, StatementDeclareVariable } from "../types.ts";
 
 export function Declare(context: Context, statement: StatementDeclareVariable | StatementDeclareConstant | StatementDeclareFunction) {
     if (statement.kind === 'function') {

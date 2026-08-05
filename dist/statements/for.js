@@ -1,5 +1,6 @@
-import { ResolveStatement, ResolveStatements, ResolveValue } from "../runner";
-import { Truthy } from "../shared/value";
+import { ResolveStatement, ResolveStatements, ResolveValue } from "../runner.js";
+import { Context } from "../shared/context.js";
+import { Truthy } from "../shared/value.js";
 export function For(context, statement) {
     const nested = context.fork();
     const r = ResolveStatement(nested, statement.base);

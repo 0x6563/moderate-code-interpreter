@@ -1,5 +1,6 @@
-import { ResolveValue } from "../runner";
-import { Value } from "../shared/value";
+import { ResolveValue } from "../runner.js";
+import { Context } from "../shared/context.js";
+import { ArrayAccessor, Value } from "../shared/value.js";
 export function ArrayLiteral(context, expression) {
     const result = [];
     for (const prop of expression.items) {
@@ -9,6 +10,6 @@ export function ArrayLiteral(context, expression) {
         }
         result.push(value);
     }
-    return Value('array', result);
+    return Value('array', ArrayAccessor(result));
 }
 //# sourceMappingURL=array.js.map

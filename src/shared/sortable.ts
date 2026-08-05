@@ -24,12 +24,18 @@ export class Sortable {
     }
 
     cap: number;
+    private compare: (a, b) => 0 | -1 | 1;
+    private low?: number;
+    private high?: number;
 
     constructor(
-        private compare: (a, b) => 0 | -1 | 1,
-        private low?: number,
-        private high?: number,
+        compare: (a, b) => 0 | -1 | 1,
+        low?: number,
+        high?: number,
     ) {
+        this.compare = compare;
+        this.low = low;
+        this.high = high;
         this.low = Math.max(this.low || 0, 0);
 
         if (typeof this.low == 'number' && typeof this.high == 'number') {

@@ -1,5 +1,5 @@
-import { ControlType, Expression, ValueType } from "../types";
-import { Context } from "./context";
+import type { ControlType, Expression, ValueType } from "../types.ts";
+import { Context } from "./context.ts";
 export declare function IterateIterable(context: Context, iterable: {
     iterable: Expression;
     k?: string;

@@ -7,13 +7,26 @@ export function Value(kind, value) {
 export function Control(kind, value) {
     return { type: 'control', kind, value };
 }
+export function ArrayAccessor(items) {
+    return new Proxy(items, {
+        get(target, key) {
+            if (key === 'length') {
+                return Value('number', target.length);
+            }
+            if (typeof key === 'string' && /^\d+$/.test(key)) {
+                return target[key];
+            }
+            return undefined;
+        }
+    });
+}
 export function DynamicValue(value) {
     const valuetype = GetValueType(value);
     if (valuetype == 'array') {
-        return Value('array', value.map(v => DynamicValue(v)));
+        return Value('array', ArrayAccessor(value.map(v => DynamicValue(v))));
     }
     if (valuetype == 'object') {
-        const r = Object.assign(null);
+        const r = {};
         for (const key in value) {
             r[key] = DynamicValue(value[key]);
         }
@@ -26,12 +39,17 @@ export function Marshal(value) {
 }
 export function Unmarshal(value) {
     if (value.kind == 'array') {
-        return value.value.map(v => Unmarshal(v));
+        const length = value.value.length.value;
+        const result = [];
+        for (let i = 0; i < length; i++) {
+            result.push(Unmarshal((value.value)[i]));
+        }
+        return result;
     }
     if (value.kind == 'object') {
-        const r = Object.assign(null);
+        const r = {};
         for (const key in value.value) {
-            r[key] = Unmarshal(value[key]);
+            r[key] = Unmarshal(value.value[key]);
         }
         return r;
     }

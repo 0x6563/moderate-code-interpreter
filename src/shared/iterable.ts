@@ -1,8 +1,8 @@
 
-import { ResolveValue } from "../runner";
-import { ControlType, Expression, ValueType } from "../types";
-import { Control, Value } from "./value";
-import { Context } from "./context";
+import { ResolveValue } from "../runner.ts";
+import type { ControlType, Expression, TDataArray, ValueType } from "../types.ts";
+import { Control, Value } from "./value.ts";
+import { Context } from "./context.ts";
 
 export function IterateIterable(context: Context, iterable: { iterable: Expression, k?: string, v: string }, callback: IterableCallback): ControlType | void {
     return Iterate(context, ResolveValue(context, iterable.iterable), iterable.k, iterable.v, callback);
@@ -34,8 +34,9 @@ export function Iterate(context: Context, value: ControlType | ValueType, keyNam
 }
 export type IterableCallback = (context: Context, k: string) => ControlType | void;
 
-function* ArrayIterate(ary: ValueType[]): Generator<[ValueType, ValueType], void, void> {
-    for (let i = 0; i < ary.length; i++) {
+function* ArrayIterate(ary: TDataArray): Generator<[ValueType, ValueType], void, void> {
+    const length = ary.length.value;
+    for (let i = 0; i < length; i++) {
         yield [Value('number', i), ary[i]]
     }
 }

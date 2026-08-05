@@ -1,9 +1,9 @@
-import { ResolveValue } from "../runner";
-import { QueryExpression, ValueType } from "../types";
-import { Iterate, IterateIterable } from "../shared/iterable";
-import { Context } from "../shared/context";
-import { Control, Truthy, Value } from "../shared/value";
-import { Sortable } from "../shared/sortable";
+import { ResolveValue } from "../runner.ts";
+import type { QueryExpression, ValueType } from "../types.ts";
+import { Iterate, IterateIterable } from "../shared/iterable.ts";
+import { Context } from "../shared/context.ts";
+import { ArrayAccessor, Control, Truthy, Value } from "../shared/value.ts";
+import { Sortable } from "../shared/sortable.ts";
 
 
 export function Query(context: Context, query: QueryExpression) {
@@ -22,7 +22,7 @@ export function Query(context: Context, query: QueryExpression) {
     if (low.kind != 'number')
         return Control('error', `Unable to slice by ${low.kind}`);
 
-    const high = query?.slice?.high ? ResolveValue(context, query.slice.high) : Value('number', source.value.length);
+    const high = query?.slice?.high ? ResolveValue(context, query.slice.high) : Value('number', source.value.length.value);
     if (high.type == 'control')
         return high;
 
@@ -75,13 +75,13 @@ export function Query(context: Context, query: QueryExpression) {
     }
 
     const sorted = sorter.extract();
-    const result = [];
+    const result: ValueType[] = [];
 
-    const loop2 = Iterate(context, Value('array', sorted), query.source.iterable.k, query.source.iterable.v, (nested, k) => {
+    const loop2 = Iterate(context, Value('array', ArrayAccessor(sorted)), query.source.iterable.k, query.source.iterable.v, (nested, k) => {
         const r = ResolveValue(nested, query.yield.value);
         if (r.type == 'control')
             return r;
-        result.push(r.value);
+        result.push(r);
     })
 
 
@@ -93,7 +93,7 @@ export function Query(context: Context, query: QueryExpression) {
         return result[0];
     }
 
-    return Value('array', result);
+    return Value('array', ArrayAccessor(result));
 }
 
 

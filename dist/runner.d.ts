@@ -1,5 +1,5 @@
-import { Statement, ValueType, Expression, ControlType, ScopeResult, ValueTypeObject } from "./types";
-import { Context } from "./shared/context";
+import type { Statement, ValueType, Expression, ControlType, ScopeResult, ValueTypeObject } from "./types.ts";
+import { Context } from "./shared/context.ts";
 export declare function Run(tree: any, data?: ValueTypeObject['value']): ValueType | ControlType | ScopeResult;
 export declare function Resolve(context: Context, tree: any): ControlType | ValueType | ScopeResult;
 export declare function ResolveStatements(context: Context, statements: Statement[]): ControlType | void;

@@ -1,5 +1,6 @@
-import { ResolveStatements, ResolveValue } from "../runner";
-import { Control, Value } from "../shared/value";
+import { ResolveStatements, ResolveValue } from "../runner.js";
+import { Context } from "../shared/context.js";
+import { Control, Value } from "../shared/value.js";
 export function Call(context, expression) {
     const r = context.get(expression.name);
     if (r.type == 'control') {

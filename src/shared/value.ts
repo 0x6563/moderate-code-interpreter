@@ -1,4 +1,4 @@
-import { ControlType, ValueType } from "../types";
+import type { ControlType, TDataArray, ValueType } from "../types.ts";
 
 type VORC<T> = T extends 'value' ? ValueType : ControlType;
 export function Wrap<T extends 'value' | 'control'>(type: T, kind: VORC<T>['kind'], value: any): VORC<T> {
@@ -13,13 +13,30 @@ export function Control(kind: ControlType['kind'], value): ControlType {
     return { type: 'control', kind, value }
 }
 
+// Array-kind TData is only ever produced through this accessor, so `.length`
+// is consistent regardless of where the array came from. Anything beyond
+// `.length` and numeric indices (methods, iteration) is deliberately blocked.
+export function ArrayAccessor(items: ValueType[]): TDataArray {
+    return new Proxy(items, {
+        get(target, key) {
+            if (key === 'length') {
+                return Value('number', target.length) as any;
+            }
+            if (typeof key === 'string' && /^\d+$/.test(key)) {
+                return target[key as any];
+            }
+            return undefined;
+        }
+    }) as unknown as TDataArray;
+}
+
 export function DynamicValue(value: any) {
     const valuetype = GetValueType(value);
     if (valuetype == 'array') {
-        return Value('array', value.map(v => DynamicValue(v)))
+        return Value('array', ArrayAccessor(value.map(v => DynamicValue(v))))
     }
     if (valuetype == 'object') {
-        const r = Object.assign(null);
+        const r = {};
         for (const key in value) {
             r[key] = DynamicValue(value[key]);
         }
@@ -34,12 +51,17 @@ export function Marshal(value: any) {
 
 export function Unmarshal(value: ValueType) {
     if (value.kind == 'array') {
-        return value.value.map(v => Unmarshal(v))
+        const length = value.value.length.value;
+        const result: any[] = [];
+        for (let i = 0; i < length; i++) {
+            result.push(Unmarshal((value.value)[i]));
+        }
+        return result;
     }
     if (value.kind == 'object') {
-        const r = Object.assign(null);
+        const r = {};
         for (const key in value.value) {
-            r[key] = Unmarshal(value[key]);
+            r[key] = Unmarshal(value.value[key]);
         }
         return r;
     }

@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsx ./scripts/compile.ts && tsc --build",
-    "test": "node --test --import tsx --test-reporter ./tests/reporter.mjs  tests/*.test.ts",
+    "test": "node --test  --test-reporter ./tests/reporter.mjs  tests/*.test.ts",
     "do": "npm run test && npm run build"
   },
   "author": "0x6563",

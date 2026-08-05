@@ -264,27 +264,35 @@
         "kind": "array",
         "value": [
             {
-                "k": {
-                    "type": "value",
-                    "kind": "object",
-                    "value": {
-                        "i": {
-                            "type": "value",
-                            "kind": "number",
-                            "value": 3
+                "type": "value",
+                "kind": "object",
+                "value": {
+                    "k": {
+                        "type": "value",
+                        "kind": "object",
+                        "value": {
+                            "i": {
+                                "type": "value",
+                                "kind": "number",
+                                "value": 3
+                            }
                         }
                     }
                 }
             },
             {
-                "k": {
-                    "type": "value",
-                    "kind": "object",
-                    "value": {
-                        "i": {
-                            "type": "value",
-                            "kind": "number",
-                            "value": 4
+                "type": "value",
+                "kind": "object",
+                "value": {
+                    "k": {
+                        "type": "value",
+                        "kind": "object",
+                        "value": {
+                            "i": {
+                                "type": "value",
+                                "kind": "number",
+                                "value": 4
+                            }
                         }
                     }
                 }
