@@ -212,7 +212,7 @@ class grammar {
                     { name: "Prop", postprocess: ({ data }) => { return ({ key: data[0], value: { type: TYPES.Reference, path: data[0] } }); }, symbols: ["Word"] }
                 ],
                 PropName: [
-                    { name: "PropName", postprocess: ({ data }) => { return (data[0]); }, symbols: ["String"] },
+                    { name: "PropName", postprocess: ({ data }) => { return (data[0].value); }, symbols: ["String"] },
                     { name: "PropName", postprocess: ({ data }) => { return (data[0]); }, symbols: ["Word"] }
                 ],
                 Prop_list: [

@@ -387,7 +387,7 @@ grammar {
 		| FunctionArg_list _ "," _ FunctionArg => ( $0.concat($4) )
 
 	[PropName] => ( $0 )
-		| String
+		| String => ( $0.value )
 		| Word
 
 	[FunctionCall]
