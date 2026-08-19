@@ -27,8 +27,8 @@ export declare const Operators: {
         like: (values: ValueType[]) => ValueType | ControlType;
         '==': (values: ValueType[]) => ValueType | ControlType;
         '!=': (values: ValueType[]) => ValueType | ControlType;
-        '!': ([a]: [any]) => boolean;
-        not: ([a]: [any]) => boolean;
+        '!': (values: ValueType[]) => ValueType | ControlType;
+        not: (values: ValueType[]) => ValueType | ControlType;
     };
     array: {
         contains: (values: ValueType[]) => ValueType | ControlType;

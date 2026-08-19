@@ -29,8 +29,8 @@ export const Operators = {
         'like': TypeSafeCall(['boolean', 'boolean'], (a, b) => a.value === b.value),
         '==': TypeSafeCall(['boolean', 'boolean'], (a, b) => a.value === b.value),
         '!=': TypeSafeCall(['boolean', 'boolean'], (a, b) => a.value != b.value),
-        '!': ([a]) => !a,
-        'not': ([a]) => !a,
+        '!': TypeSafeCall(['boolean'], (a) => !a.value),
+        'not': TypeSafeCall(['boolean'], (a) => !a.value),
     },
     array: {
         'contains': TypeSafeCall(['array', 'any'], (a, b) => a.value.includes(b)),
